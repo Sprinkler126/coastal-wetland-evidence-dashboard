@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.title">湿地面积变化模型特征分析 — 交互式仪表板</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="vendor/echarts.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar" aria-label="主导航" data-i18n-aria-label="common.mainNavigation">
+    <h1>🌊 <span data-i18n="app.name">湿地模型特征分析</span></h1>
+    <div class="nav-tabs">
+        <button class="nav-tab active" type="button" onclick="showPage('overview')" data-i18n="nav.overview">总览</button>
+        <button class="nav-tab" type="button" onclick="showPage('importance')" data-i18n="nav.importance">模型特征重要性</button>
+        <button class="nav-tab" type="button" onclick="showPage('dependence')" data-i18n="nav.dependence">依赖关系</button>
+        <button class="nav-tab" type="button" onclick="showPage('partial')" data-i18n="nav.partial">部分效应</button>
+        <button class="nav-tab" type="button" onclick="showPage('heterogeneity')" data-i18n="nav.heterogeneity">城市异质性</button>
+        <button class="nav-tab" type="button" onclick="showPage('region')" data-i18n="nav.region">区域下钻</button>
+        <button class="nav-tab" type="button" onclick="showPage('ai')" data-i18n="nav.ai">AI 解释</button>
+        <button class="nav-tab" type="button" onclick="showPage('actions')" data-i18n="nav.actions">行动与简报</button>
+    </div>
+    <div class="nav-locale">
+        <label class="visually-hidden" for="locale-select" data-i18n="locale.label">选择语言</label>
+        <select id="locale-select" aria-describedby="locale-status" data-i18n-aria-label="locale.label" onchange="setLocale(this.value)">
+            <option value="zh-CN" data-i18n="locale.zh-CN">简体中文</option>
+            <option value="en" data-i18n="locale.en">English</option>
+        </select>
+        <span id="locale-status" class="visually-hidden" aria-live="polite" aria-atomic="true">当前语言：简体中文</span>
+    </div>
+</nav>
+
+<div class="main">
+
+<div id="page-overview" class="page active">
+    <section class="overview-hero">
+        <div>
+            <p class="eyebrow" data-i18n="overview.eyebrow">湿地守望 · 证据导航</p>
+            <h2 data-i18n="overview.title">沿海湿地历史证据总览</h2>
+            <p class="hero-copy" data-i18n="overview.copy">用确定性历史指标定位值得进一步核查的城市群与湿地组合。这里展示观测期证据，不输出未来风险概率。</p>
+        </div>
+        <button class="primary-action" type="button" onclick="openRecommendationDrawer()" data-i18n="overview.recommendation">查看推荐理由</button>
+    </section>
+
+    <div class="stat-cards overview-stats">
+        <div class="stat-card"><div class="value">2001–2022</div><div class="label" data-i18n="overview.period">历史观测期</div></div>
+        <div class="stat-card"><div class="value">1,166</div><div class="label" data-i18n="overview.observations">空间单元—年份观测</div></div>
+        <div class="stat-card"><div class="value">53</div><div class="label" data-i18n="overview.spatialUnits">沿海空间单元</div></div>
+        <div class="stat-card"><div class="value">5</div><div class="label" data-i18n="overview.clusters">城市群</div></div>
+        <div class="stat-card"><div class="value">4</div><div class="label" data-i18n="overview.wetlands">重点湿地类型</div></div>
+    </div>
+
+    <section class="notice notice-info"><strong data-i18n="overview.readingRule">读图口径：</strong><span data-i18n="overview.boundary">Figure 14 矩阵展示综合筛查/复核类别，历史变化导航展示观测期事实；这些类别不是未来风险概率。</span></section>
+
+    <section class="overview-section">
+        <div class="section-heading">
+            <div><p class="eyebrow" data-i18n="overview.navigation">五群导航</p><h3 data-i18n="overview.evidenceAndTrend">证据状态与历史变化</h3></div>
+            <div class="segmented-control" role="tablist" aria-label="首页视图" data-i18n-aria-label="overview.viewLabel">
+                <button class="segment active" type="button" role="tab" aria-selected="true" onclick="setOverviewView('matrix', this)" data-i18n="overview.matrix">证据矩阵</button>
+                <button class="segment" type="button" role="tab" aria-selected="false" onclick="setOverviewView('trend', this)" data-i18n="overview.trend">历史变化</button>
+            </div>
+        </div>
+        <div id="overview-matrix-view">
+            <div class="matrix-toolbar">
+                <label for="overview-wetland" data-i18n="overview.wetlandType">湿地类型</label>
+                <select id="overview-wetland" onchange="renderOverviewMatrix()" data-i18n-aria-label="overview.wetlandType"></select>
+                <span class="matrix-legend"><span class="status-dot status-high"></span><span data-i18n="overview.legendHigh">Figure 14 高类别</span><span class="status-dot status-medium"></span><span data-i18n="overview.legendMedium">Figure 14 中类别</span><span class="status-dot status-decoupling"></span><span data-i18n="overview.legendDecoupling">Figure 14 脱钩类别</span><span class="status-dot status-insufficient-data"></span><span data-i18n="overview.legendInsufficient">数据不足</span></span>
+            </div>
+            <div id="evidence-matrix" class="evidence-matrix" aria-live="polite"></div>
+        </div>
+        <div id="overview-trend-view" class="is-hidden">
+            <div class="matrix-toolbar">
+                <label for="overview-trend-wetland" data-i18n="overview.wetlandType">湿地类型</label>
+                <select id="overview-trend-wetland" onchange="renderOverviewTrends()" data-i18n-aria-label="overview.wetlandType"></select>
+                <span class="muted" data-i18n="overview.descriptive">描述性历史变化，不代表未来趋势</span>
+            </div>
+            <div id="overview-trends" class="trend-grid" aria-live="polite"></div>
+        </div>
+    </section>
+
+    <section class="overview-section">
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="overview.caseEntry">案例入口</p><h3 data-i18n="overview.whyBys">为什么先看环渤海？</h3></div></div>
+        <div class="recommendation-strip">
+            <div><strong><span data-i18n="cluster.BYS">环渤海</span> (BYS)</strong><span data-i18n="overview.mainCase">主案例下钻 · 演示案例选择</span></div>
+            <p data-i18n="overview.caseDescription">综合样本规模、变化故事、公共议题和演示结构选择；不是风险矩阵自动选出的最高风险区域。Day 6 加入北部湾（BBG）作为同指标同尺度生态对照。</p>
+            <button class="secondary-action" type="button" onclick="openRegionPage('BYS')" data-i18n="overview.openRegion">进入区域下钻</button>
+            <button class="secondary-action" type="button" onclick="openRegionPage('BBG')" data-i18n="overview.openBbg">查看北部湾对照</button>
+            <button class="text-action" type="button" onclick="openRecommendationDrawer()" data-i18n="overview.recommendation">查看理由</button>
+        </div>
+    </section>
+
+    <section class="overview-section compact-section">
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="overview.applicability">适用性</p><h3 data-i18n="overview.modelBoundary">数据与模型边界</h3></div></div>
+        <div id="overview-quality" class="quality-grid"></div>
+    </section>
+
+    <div id="overview-drawer" class="drawer-overlay is-hidden" role="presentation" onclick="handleDrawerOverlay(event)">
+        <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+            <button class="drawer-close" type="button" aria-label="关闭" data-i18n-aria-label="common.close" onclick="closeOverviewDrawer()" title="关闭" data-i18n-title="common.close">×</button>
+            <div id="drawer-content"></div>
+        </aside>
+    </div>
+</div>
+
+<div id="page-region" class="page">
+    <section class="region-hero">
+        <div><p class="eyebrow" data-i18n="region.eyebrow">区域下钻 · 历史筛查</p><h2 id="region-title">环渤海空间单元</h2><p id="region-role">主案例下钻 · 17 个空间单元</p></div>
+        <button class="secondary-action" type="button" onclick="showPage('overview')" data-i18n="region.backOverview">返回五群总览</button>
+    </section>
+    <section class="notice notice-info"><strong data-i18n="region.readingRuleLabel">区域口径：</strong><span data-i18n="region.rule">以下排序、变化量和热图只描述 2001–2022 年空间单元历史事实，不是风险等级、未来预测或因果判断。</span></section>
+    <section class="day6-comparison" aria-labelledby="day6-comparison-title">
+        <div class="section-heading">
+            <div><p class="eyebrow" data-i18n="region.comparisonEyebrow">Day 6 · 北部湾对照</p><h3 id="day6-comparison-title" data-i18n="region.comparisonTitle">同指标同尺度比较</h3></div>
+            <span class="muted" data-i18n="region.comparisonMeta">BYS vs BBG · 2001–2022 · 城市群尺度</span>
+        </div>
+        <div id="region-comparison" aria-live="polite"></div>
+    </section>
+    <div class="region-toolbar">
+        <label for="region-cluster" data-i18n="region.cluster">城市群</label><select id="region-cluster" onchange="setRegionCluster(this.value)" data-i18n-aria-label="region.cluster"><option value="BYS">BYS</option><option value="BBG">BBG</option></select>
+        <label for="region-wetland" data-i18n="region.wetland">湿地</label><select id="region-wetland" onchange="setRegionWetland(this.value)" data-i18n-aria-label="region.wetland"></select>
+        <label for="region-sort" data-i18n="region.sort">排序</label><select id="region-sort" onchange="setRegionSort(this.value)" data-i18n-aria-label="region.sort"><option value="absolute_change" data-i18n="region.sortAbsolute">绝对变化（升序）</option><option value="relative_change_rate" data-i18n="region.sortRate">变化率（升序）</option><option value="slope_per_year" data-i18n="region.sortSlope">年斜率（升序）</option><option value="city" data-i18n="region.sortCity">空间单元名称</option></select>
+        <label for="region-quality" data-i18n="region.qualityFilter">质量筛选</label><select id="region-quality" onchange="setRegionQuality(this.value)" data-i18n-aria-label="region.qualityFilter"><option value="all" data-i18n="region.filterAll">全部</option><option value="flagged" data-i18n="region.filterFlagged">有质量标记</option><option value="decrease" data-i18n="region.filterDecrease">历史减少</option><option value="increase" data-i18n="region.filterIncrease">历史增加</option><option value="stable" data-i18n="region.filterStable">历史稳定</option></select>
+        <button class="text-action" type="button" onclick="toggleSortHelp()" data-i18n="region.sortHelp">排序规则说明</button>
+    </div>
+    <p id="region-sort-help" class="sort-help is-hidden" data-i18n="region.sortHelpText">数值按升序排列，缺失值（包括零起点不可计算的变化率）始终置后；相同值按空间单元名称排序。这是历史核查顺序，不是风险排序。</p>
+    <section class="region-summary-grid" id="region-wetland-summary"></section>
+    <section class="region-section"><div class="section-heading"><div><p class="eyebrow" data-i18n="region.unitList">空间单元列表</p><h3 id="region-list-title">17 个空间单元</h3></div><span id="region-count" class="muted"></span></div><div id="region-units" class="unit-list"></div></section>
+    <section class="region-section"><div class="section-heading"><div><p class="eyebrow" data-i18n="region.changeHeatmap">变化量热图</p><h3 data-i18n="region.wetlandByUnit">四类湿地 × 空间单元</h3></div><span class="muted" data-i18n="region.heatmapRule">颜色表示历史绝对变化，非风险</span></div><div id="region-heatmap" class="region-heatmap"></div></section>
+    <div id="unit-drawer" class="drawer-overlay is-hidden" role="presentation" onclick="handleUnitDrawerOverlay(event)"><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="unit-drawer-title"><button class="drawer-close" type="button" aria-label="关闭" data-i18n-aria-label="common.close" onclick="closeUnitEvidenceCard()" title="关闭" data-i18n-title="common.close">×</button><div id="unit-drawer-content"></div></aside></div>
+</div>
+
+<div id="page-ai" class="page">
+    <section class="ai-hero">
+        <div>
+            <p class="eyebrow" data-i18n="ai.eyebrow">Day 7 · AI 问数与解释</p>
+            <h2 data-i18n="ai.title">基于结构化证据对象生成解释</h2>
+            <p class="hero-copy" data-i18n="ai.copy">静态 MVP 使用受控模板适配器，不自行计算数字，不输出未来风险概率；每条解释保留引用和人工审核提示。</p>
+        </div>
+        <button class="secondary-action" type="button" onclick="showPage('overview')" data-i18n="region.backOverview">返回五群总览</button>
+    </section>
+    <section class="notice notice-info"><strong data-i18n="ai.guardrail">AI 护栏：</strong><span data-i18n="ai.guardrailCopy">所有数字来自 Day 7 输入 JSON；关联和模型归因不表示因果；解释通过规则检查后仍需人工审核。</span></section>
+    <section class="ai-workbench">
+        <div class="ai-controls card">
+            <div class="control-group"><label for="ai-audience" data-i18n="ai.audience">受众模式</label><select id="ai-audience" onchange="submitAiQuestion()" data-i18n-aria-label="ai.audience"><option value="public" data-i18n="audience.public">公众版</option><option value="ngo_internal" data-i18n="audience.ngo_internal">NGO 内部版</option><option value="funder" data-i18n="audience.funder">资助方版</option></select></div>
+            <div class="control-group"><label for="ai-cluster" data-i18n="region.cluster">城市群</label><select id="ai-cluster" onchange="aiState.cluster=this.value; submitAiQuestion()" data-i18n-aria-label="region.cluster"></select></div>
+            <div class="control-group"><label for="ai-wetland" data-i18n="region.wetland">湿地</label><select id="ai-wetland" onchange="aiState.wetland=this.value; submitAiQuestion()" data-i18n-aria-label="region.wetland"></select></div>
+            <div class="control-group ai-question-box"><label for="ai-question" data-i18n="ai.question">问题</label><textarea id="ai-question" rows="4" placeholder="例如：环渤海潮滩历史变化说明了什么？" data-i18n-placeholder="ai.questionPlaceholder"></textarea></div>
+            <button class="primary-action" type="button" onclick="submitAiQuestion()" data-i18n="ai.generate">生成结构化解释</button>
+            <div class="ai-guardrail-copy"><strong data-i18n="ai.prePublish">发布前检查</strong><ul><li data-i18n="ai.noNewNumbers">不自行计算数字</li><li data-i18n="ai.reviewRequired">人工审核</li><li data-i18n="ai.noFutureRisk">不输出未来风险概率</li><li data-i18n="ai.citeEvidence">引用 Day 3 evidence/source</li></ul></div>
+        </div>
+        <div class="ai-main">
+            <div class="section-heading"><div><p class="eyebrow" data-i18n="ai.suggested">推荐问题</p><h3 data-i18n="ai.samplesTitle">20 个验收问题样例</h3></div></div>
+            <div id="ai-suggestions" class="ai-suggestions"></div>
+            <div id="ai-output" aria-live="polite"></div>
+        </div>
+    </section>
+</div>
+
+<div id="page-actions" class="page">
+    <section class="actions-hero">
+        <div>
+            <p class="eyebrow" data-i18n="actions.eyebrow">Day 8 · 行动任务和简报</p>
+            <h2 data-i18n="actions.title">从证据卡生成任务草稿与 Markdown 简报</h2>
+            <p class="hero-copy" data-i18n="actions.copy">任务和简报均为静态 MVP 草稿，不持久化、不自动指定真实责任主体；导出时保留 evidence id、来源 SHA 和人工审核状态。</p>
+        </div>
+        <button class="secondary-action" type="button" onclick="showPage('overview')" data-i18n="region.backOverview">返回五群总览</button>
+    </section>
+    <section class="notice notice-info"><strong data-i18n="actions.guardrail">Day 8 护栏：</strong><span data-i18n="actions.guardrailCopy">行动任务不是审批结果；简报不输出未来风险概率、不写因果结论、不把面积增长等同修复成功。</span></section>
+    <section class="actions-workbench">
+        <div class="actions-left">
+            <article class="card action-source-card"><div class="card-header" data-i18n="actions.sourceEvidence">来源证据</div><div class="card-body" id="action-source-context"></div></article>
+            <article class="card action-task-card"><div class="card-header" data-i18n="actions.taskDraft">任务草稿</div><div class="card-body action-task-form" id="action-task-form"></div></article>
+        </div>
+        <div class="actions-main">
+            <div class="section-heading"><div><p class="eyebrow" data-i18n="actions.taskList">任务列表</p><h3 data-i18n="actions.memoryDraft">内存草稿（刷新页面会丢失）</h3></div></div>
+            <div class="action-task-list" id="action-task-list"></div>
+            <article class="card brief-panel">
+                <div class="card-header" data-i18n="actions.briefExport">简报与 Markdown 导出</div>
+                <div class="card-body">
+                    <label class="brief-audience-control"><span data-i18n="actions.audienceSelect">受众选择</span> <select id="brief-audience" onchange="setBriefAudience(this.value)" data-i18n-aria-label="actions.audienceSelect"><option value="public" data-i18n="audience.public">公众版</option><option value="ngo_internal" data-i18n="audience.ngo_internal">NGO 内部版</option><option value="funder" data-i18n="audience.funder">资助方版</option></select></label>
+                    <div id="brief-preview" class="brief-preview"></div>
+                    <h4 data-i18n="actions.markdownPreview">Markdown 预览</h4>
+                    <pre id="markdown-export-preview" class="markdown-preview"></pre>
+                </div>
+            </article>
+        </div>
+    </section>
+</div>
+
+<div id="page-importance" class="page">
+    <div class="controls">
+        <div class="control-group"><label for="imp-wetland" data-i18n="importance.wetlandType">湿地类型</label><select id="imp-wetland" onchange="updateImportance()" data-i18n-aria-label="importance.wetlandType"></select></div>
+        <div class="control-group"><span class="control-label" data-i18n="importance.displayMode">显示模式</span><div class="toggle-group" role="group" aria-label="显示模式" data-i18n-aria-label="importance.displayMode"><button class="toggle-btn active" type="button" onclick="setImpMode('raw', this)" data-i18n="importance.raw">原始值</button><button class="toggle-btn" type="button" onclick="setImpMode('norm', this)" data-i18n="importance.normalized">标准化</button><button class="toggle-btn" type="button" onclick="setImpMode('group', this)" data-i18n="importance.groups">分组</button></div></div>
+    </div>
+    <div class="card"><div class="card-header"><span id="imp-title">红树林 — SHAP 模型特征重要性</span></div><div class="card-body"><div id="chart-imp-heatmap" class="chart-container" role="img" aria-label="模型特征重要性热图"></div></div></div>
+    <div class="card"><div class="card-header" data-i18n="importance.globalRanking">全样本模型 SHAP 重要性排序</div><div class="card-body"><div id="chart-imp-bar" class="chart-container" role="img" aria-label="全样本模型 SHAP 重要性排序图"></div></div></div>
+</div>
+
+<div id="page-dependence" class="page">
+    <div class="controls">
+        <div class="control-group"><label for="dep-wetland" data-i18n="dependence.wetlandType">湿地类型</label><select id="dep-wetland" onchange="updateDependence()" data-i18n-aria-label="dependence.wetlandType"></select></div>
+        <div class="control-group"><label for="dep-feature" data-i18n="dependence.feature">模型特征</label><select id="dep-feature" onchange="updateDependence()" data-i18n-aria-label="dependence.feature"></select></div>
+        <div class="control-group"><span class="control-label" data-i18n="dependence.displayMode">显示模式</span><div class="toggle-group" role="group" aria-label="显示模式" data-i18n-aria-label="dependence.displayMode"><button class="toggle-btn active" type="button" onclick="setDepMode('single', this)" data-i18n="dependence.singleCluster">单个城市群</button><button class="toggle-btn" type="button" onclick="setDepMode('compare', this)" data-i18n="dependence.comparison">比较</button></div></div>
+        <div class="control-group" id="dep-cluster-group"><label for="dep-cluster" data-i18n="dependence.cluster">城市群</label><select id="dep-cluster" onchange="updateDependence()" data-i18n-aria-label="dependence.cluster"></select></div>
+    </div>
+    <div class="card"><div class="card-header"><span id="dep-title">SHAP 依赖关系图</span></div><div class="card-body"><div id="chart-dependence" class="chart-container" role="img" aria-label="SHAP 依赖关系图"></div></div></div>
+    <div class="info-box"><strong data-i18n="dependence.howToRead">如何阅读依赖关系图：</strong><span data-i18n="dependence.reading">x 轴显示观测到的模型特征值，y 轴显示该模型特征的 SHAP 值。正 SHAP 值增加模型预测的湿地面积，负 SHAP 值降低它。每个点代表一个样本。</span></div>
+</div>
+
+<div id="page-partial" class="page">
+    <div class="controls">
+        <div class="control-group"><label for="pe-wetland" data-i18n="partial.wetlandType">湿地类型</label><select id="pe-wetland" onchange="updatePartial()" data-i18n-aria-label="partial.wetlandType"></select></div>
+        <div class="control-group"><label for="pe-feature" data-i18n="partial.feature">模型特征</label><select id="pe-feature" onchange="updatePartial()" data-i18n-aria-label="partial.feature"></select></div>
+        <div class="control-group"><span class="control-label" data-i18n="partial.displayMode">显示模式</span><div class="toggle-group" role="group" aria-label="显示模式" data-i18n-aria-label="partial.displayMode"><button class="toggle-btn active" type="button" onclick="setPeMode('single', this)" data-i18n="partial.singleCluster">单个城市群</button><button class="toggle-btn" type="button" onclick="setPeMode('compare', this)" data-i18n="partial.comparison">比较</button></div></div>
+        <div class="control-group" id="pe-cluster-group"><label for="pe-cluster" data-i18n="partial.cluster">城市群</label><select id="pe-cluster" onchange="updatePartial()" data-i18n-aria-label="partial.cluster"></select></div>
+    </div>
+    <div class="card"><div class="card-header"><span id="pe-title">部分效应曲线</span></div><div class="card-body"><div id="chart-partial" class="chart-container" role="img" aria-label="部分效应曲线"></div></div></div>
+    <div class="card"><div class="card-header" data-i18n="partial.elasticity">弹性热图（所有模型特征 × 城市群）</div><div class="card-body"><div id="chart-elasticity" class="chart-container" role="img" aria-label="弹性热图"></div></div></div>
+    <div class="info-box"><strong data-i18n="partial.howToRead">如何阅读部分效应图：</strong><span data-i18n="partial.reading">其他模型特征固定在均值，所选模型特征从第 10 百分位数变化到第 90 百分位数。曲线越陡，表示模型响应越强。</span></div>
+</div>
+
+<div id="page-heterogeneity" class="page">
+    <div class="controls"><div class="control-group"><label for="het-wetland" data-i18n="heterogeneity.fixedWetland">固定湿地类型</label><select id="het-wetland" onchange="updateHeterogeneity()" data-i18n-aria-label="heterogeneity.fixedWetland"></select></div></div>
+    <div class="card"><div class="card-header"><span id="het-title">红树林 — 城市群间 SHAP 重要性比较</span></div><div class="card-body"><div id="chart-het-radar" class="chart-container" role="img" aria-label="城市群间 SHAP 重要性比较"></div></div></div>
+    <div class="grid-2"><div class="card"><div class="card-header" data-i18n="heterogeneity.groupComparison">分组重要性比较</div><div class="card-body"><div id="chart-het-group" class="chart-container small" role="img" aria-label="分组重要性比较图"></div></div></div><div class="card"><div class="card-header" data-i18n="heterogeneity.top3">前三项模型特征</div><div class="card-body"><div class="table-container" id="het-top3-table" aria-live="polite"></div></div></div></div>
+    <div class="card"><div class="card-header" data-i18n="heterogeneity.dependenceComparison">模型特征依赖关系比较（平均 SHAP）</div><div class="card-body"><div id="chart-het-dep" class="chart-container" role="img" aria-label="模型特征依赖关系比较图"></div></div></div>
+</div>
+
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/data.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/ai_explain.js"></script>
+<script src="js/actions_briefs.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
