@@ -303,6 +303,70 @@ function evidenceSupportGradeDisplay(value) {
     return { label: msg(display[0], display[1]), note: msg(display[2], display[3]) };
 }
 
+function structuredFeatureLabel(item) {
+    if (item?.feature_code && FEATURE_LABELS[item.feature_code]) return FEATURE_LABELS[item.feature_code];
+    return item?.source_label || unavailableText();
+}
+
+function localizedFeatureList(items = []) {
+    return items.map(structuredFeatureLabel).join(msg('matrixEvidence.listSeparator', ', '));
+}
+
+function modelStatusDisplay(value) {
+    if (value === 'estimable') return msg('matrixEvidence.model.estimable', 'Model available');
+    if (String(value || '').startsWith('failed')) return msg('matrixEvidence.model.failed', 'Model unavailable / estimation failed');
+    return value || unavailableText();
+}
+
+function evidenceSignalCard(state, title, body) {
+    return `<article class="evidence-signal signal-${state}"><span class="signal-state">${html(msg(`matrixEvidence.state.${state}`, state))}</span><h4>${html(title)}</h4><p>${html(body)}</p></article>`;
+}
+
+function renderMatrixEvidenceExplanation(risk = {}) {
+    const evidence = risk.Structured_Evidence || {};
+    const twfe = evidence.twfe_negative_terms || [];
+    const shap = evidence.shap_top3 || [];
+    const partial = evidence.partial_effect_top3 || [];
+    const gmm = evidence.gmm || {};
+    const twfeCard = twfe.length
+        ? evidenceSignalCard('support', msg('matrixEvidence.twfe.title', 'Historical association'), msg('matrixEvidence.twfe.found', '{count} factors show significant negative associations with wetland area: {features}.', { count: twfe.length, features: localizedFeatureList(twfe) }))
+        : evidenceSignalCard('caution', msg('matrixEvidence.twfe.title', 'Historical association'), msg('matrixEvidence.twfe.none', 'No significant negative regional association was found at p < 0.10.'));
+    const shapCard = shap.length
+        ? evidenceSignalCard('context', msg('matrixEvidence.shap.title', 'Model focus'), msg('matrixEvidence.shap.found', 'The prediction model focuses most on: {features}. Importance does not imply causality.', { features: localizedFeatureList(shap) }))
+        : evidenceSignalCard('unavailable', msg('matrixEvidence.shap.title', 'Model focus'), msg('matrixEvidence.shap.none', 'No stable model-focus summary is available.'));
+    const partialCard = partial.length
+        ? evidenceSignalCard('context', msg('matrixEvidence.partial.title', 'Response sensitivity'), msg('matrixEvidence.partial.found', 'Within the observed range, the model is most sensitive to: {features}.', { features: localizedFeatureList(partial) }))
+        : evidenceSignalCard('unavailable', msg('matrixEvidence.partial.title', 'Response sensitivity'), msg('matrixEvidence.partial.none', 'No stable response-sensitivity summary is available.'));
+    const gmmCard = {
+        SIGNIFICANT_POSITIVE_PERSISTENCE: () => evidenceSignalCard('support', msg('matrixEvidence.gmm.title', 'Persistence evidence'), msg('matrixEvidence.gmm.positive', 'The wetland-level dynamic model suggests positive persistence or possible recovery lag.')),
+        NOT_SIGNIFICANT_OR_UNSTABLE: () => evidenceSignalCard('caution', msg('matrixEvidence.gmm.title', 'Persistence evidence'), msg('matrixEvidence.gmm.unstable', 'The persistence estimate is not significant or is unstable; it should not be treated as supporting evidence.')),
+        NOT_AVAILABLE: () => evidenceSignalCard('unavailable', msg('matrixEvidence.gmm.title', 'Persistence evidence'), msg('matrixEvidence.gmm.unavailable', 'No usable persistence estimate is available for this wetland type.')),
+    }[gmm.status_code]?.() || evidenceSignalCard('unavailable', msg('matrixEvidence.gmm.title', 'Persistence evidence'), msg('matrixEvidence.gmm.unavailable', 'No usable persistence estimate is available for this wetland type.'));
+    return `<div class="evidence-signal-grid">${twfeCard}${shapCard}${partialCard}${gmmCard}</div>`;
+}
+
+function renderClassificationComparison(display, risk, supportGrade) {
+    return `<div class="classification-comparison"><article><span>${html(msg('matrixEvidence.sourceCategory', 'Source classification'))}</span><strong class="badge-${display.state}">${html(display.label)}</strong><p>${html(msg('matrixEvidence.sourceCategoryNote', 'Retained from the manuscript source figure; it was not recalculated by this site.'))}</p></article><article><span>${html(msg('matrixEvidence.supportGrade', 'Current evidence consistency'))}</span><strong>${html(supportGrade.label)}</strong><p>${html(supportGrade.note)}</p></article></div>`;
+}
+
+function renderInterpretationGuide(scope, flags = [], modelStatus = '') {
+    const canExplain = scope === 'spatial_unit'
+        ? [msg('interpretation.can.unitTrend', 'Describe this spatial unit’s historical area change.'), msg('interpretation.can.compare', 'Support comparison using the same period and method.')]
+        : [msg('interpretation.can.clusterTrend', 'Describe historical change at the city-cluster level.'), msg('interpretation.can.association', 'Identify statistical associations and model-focus factors that need review.'), msg('interpretation.can.review', 'Help prioritize questions for additional data and expert review.')];
+    const cannotExplain = [msg('interpretation.cannot.causality', 'Prove that a factor caused wetland change.'), msg('interpretation.cannot.prediction', 'Produce a future-risk probability or policy-effect estimate.')];
+    cannotExplain.push(scope === 'spatial_unit'
+        ? msg('interpretation.cannot.unitModel', 'Infer unit-level TWFE, SHAP, or partial effects from city-cluster models.')
+        : msg('interpretation.cannot.downscale', 'Apply city-cluster model results directly to a specific spatial unit.'));
+    if (String(modelStatus).startsWith('failed')) cannotExplain.push(msg('interpretation.cannot.failedModel', 'Use the failed regional model as quantitative support.'));
+    const flagDetails = flags.length ? `<details class="technical-trace compact-trace"><summary>${html(msg('interpretation.qualityFlags', 'Quality-check codes'))}</summary><code>${html(flags.join(', '))}</code></details>` : '';
+    return `<div class="interpretation-grid"><article class="interpretation-can"><h4>${html(msg('interpretation.canTitle', 'What this can show'))}</h4><ul>${canExplain.map(text => `<li>${html(text)}</li>`).join('')}</ul></article><article class="interpretation-cannot"><h4>${html(msg('interpretation.cannotTitle', 'What this cannot show'))}</h4><ul>${cannotExplain.map(text => `<li>${html(text)}</li>`).join('')}</ul></article></div>${flagDetails}`;
+}
+
+function renderMatrixTechnicalDetails(risk, modelStatus, flags = []) {
+    const gmm = risk.Structured_Evidence?.gmm || {};
+    return `<details class="technical-trace model-technical-trace"><summary>${html(msg('matrixEvidence.technicalSummary', 'Model parameters and source records'))}</summary><dl><div><dt>${html(msg('matrixEvidence.sampleSize', 'Model sample size'))}</dt><dd>${dynamicText(msg('matrixEvidence.sampleSizeValue', '{value} spatial-unit–year observations', { value: formatEvidenceNumber(risk.Sample_N_city_year, 0) }))}</dd></div><div><dt>${html(msg('matrixEvidence.modelStatus', 'Regional model status'))}</dt><dd>${html(modelStatusDisplay(modelStatus))}</dd></div><div><dt>${html(msg('matrixEvidence.twfeRaw', 'TWFE negative terms (source record)'))}</dt><dd>${html(risk.Regional_TWFE_significant_negative_terms_p_lt_0_10 || unavailableText())}</dd></div><div><dt>${html(msg('matrixEvidence.shapRaw', 'SHAP top 3 (source record)'))}</dt><dd>${html(risk.Cluster_SHAP_top3 || unavailableText())}</dd></div><div><dt>${html(msg('matrixEvidence.partialRaw', 'Partial-effect top 3 (source record)'))}</dt><dd>${html(risk.Cluster_partial_effect_top3_by_elasticity || unavailableText())}</dd></div><div><dt>${html(msg('matrixEvidence.gmmRaw', 'GMM lag estimate'))}</dt><dd>${html(msg('matrixEvidence.gmmRawValue', 'Coefficient {coefficient}; p-value {pValue}', { coefficient: formatEvidenceNumber(gmm.coefficient, 4), pValue: formatEvidenceNumber(gmm.p_value, 4) }))}</dd></div>${flags.length ? `<div><dt>${html(msg('interpretation.qualityFlags', 'Quality-check codes'))}</dt><dd><code>${html(flags.join(', '))}</code></dd></div>` : ''}</dl></details>`;
+}
+
 function applyOverviewView() {
     document.getElementById('overview-matrix-view')?.classList.toggle('is-hidden', overviewView !== 'matrix');
     document.getElementById('overview-trend-view')?.classList.toggle('is-hidden', overviewView !== 'trend');
@@ -335,7 +399,6 @@ function renderEvidenceDrawer(wetland, cluster) {
     const trend = item.trend || {};
     const metrics = trend.metrics || {};
     const display = screeningCategoryDisplay(item.risk_matrix);
-    const models = getEvidenceModels(wetland, cluster);
     const modelStatus = item.model_summary?.status || unavailableText();
     const flags = (trend.quality_flag_ids || []).map(id => DATA.evidenceBundle._flagsById.get(id)?.flag || id);
     const risk = item.risk_matrix || {};
@@ -343,19 +406,25 @@ function renderEvidenceDrawer(wetland, cluster) {
     document.getElementById('drawer-content').innerHTML = `
         <p class="eyebrow">${html(msg('drawer.evidenceSummary', 'Evidence summary'))} · ${html(evidenceScaleDisplay(trend.scale))}</p>
         <h2 id="drawer-title">${html(WETLAND_LABELS[wetland])} · ${html(CLUSTER_LABELS[cluster])}</h2>
-        <div class="drawer-status badge-${display.state}">${html(display.label)} · ${html(screeningCellLabel(risk.Cell_Label))}</div>
-        <p class="drawer-warning">${html(msg('drawer.figure14Boundary', '{note} Matrix classifications are source screening/review categories, not future-risk probabilities.', { note: display.note }))}</p>
+        <div class="drawer-status badge-demo">${html(msg('matrixEvidence.reviewTheme', 'Review theme: {value}', { value: screeningCellLabel(risk.Cell_Label) }))}</div>
+        <p class="drawer-warning">${html(msg('matrixEvidence.headerNote', 'The source classification and current evidence consistency are shown separately; neither is a future-risk probability.'))}</p>
         <section class="drawer-section">
             <h3>${html(msg('drawer.historicalFacts', 'Historical change'))}</h3>
             <p>${html(trend.period?.label || unavailableText())} · ${html(evidenceScaleDisplay(trend.scale))} · ${html(evidenceMethodDisplay(trend.method))}</p>
             <dl class="drawer-metrics"><div><dt>${html(msg('metrics.startToEnd', 'Start → end'))}</dt><dd>${formatEvidenceNumber(metrics.start_value)} → ${formatEvidenceNumber(metrics.end_value)}</dd></div><div><dt>${html(msg('metrics.absoluteChange', 'Absolute change'))}</dt><dd>${formatEvidenceNumber(metrics.absolute_change)}</dd></div><div><dt>${html(msg('metrics.changeRate', 'Change rate'))}</dt><dd>${formatEvidenceRate(metrics)}</dd></div><div><dt>${html(msg('metrics.annualSlope', 'Annual slope'))}</dt><dd>${formatEvidenceNumber(metrics.slope_per_year, 2)}</dd></div><div><dt>${html(msg('metrics.sampleCoverage', 'Sample coverage'))}</dt><dd>${dynamicText(msg('metrics.coverageValue', '{years} years · {units} units', { years: formatEvidenceNumber(metrics.observations, 0), units: formatEvidenceNumber(metrics.spatial_units, 0) }))}</dd></div></dl>
         </section>
         <section class="drawer-section">
-            <h3>${html(msg('drawer.figure14SupportingEvidence', 'Matrix supporting evidence'))}</h3>
-            <p><strong>${html(msg('drawer.evidenceSupportGrade', 'Evidence support grade: {value}', { value: supportGrade.label }))}</strong></p><p>${html(supportGrade.note)}</p><p>${html(msg('drawer.figure14SampleSize', 'Model sample size: {value} spatial-unit–year observations', { value: formatEvidenceNumber(risk.Sample_N_city_year, 0) }))}</p><p>${html(msg('drawer.twfeNegativeTerms', 'TWFE significant negative terms: {value}', { value: risk.Regional_TWFE_significant_negative_terms_p_lt_0_10 || unavailableText() }))}</p><p>${html(msg('drawer.shapTop3', 'SHAP top 3: {value}', { value: risk.Cluster_SHAP_top3 || unavailableText() }))}</p><p>${html(msg('drawer.partialTop3', 'Partial-effect top 3: {value}', { value: risk.Cluster_partial_effect_top3_by_elasticity || unavailableText() }))}</p><p>${html(msg('drawer.gmmLagTerms', 'GMM lag terms: {value}', { value: risk.Wetland_GMM_lag_status || unavailableText() }))}</p>
+            <h3>${html(msg('matrixEvidence.classificationTitle', 'Classification and current evidence'))}</h3>
+            ${renderClassificationComparison(display, risk, supportGrade)}
         </section>
         <section class="drawer-section">
-            <h3>${html(msg('drawer.modelsAndLimitations', 'Models and limitations'))}</h3><p>${html(msg('drawer.regionalModelStatus', 'Regional model status: {value}', { value: modelStatus }))}</p><ul>${[...(trend.limitations || []), ...models.slice(0, 3).flatMap(model => model.limitations || [])].map(text => `<li>${html(text)}</li>`).join('')}</ul>${flags.length ? `<p>${html(msg('drawer.qualityFlags', 'Quality flags: {flags}', { flags: flags.join(', ') }))}</p>` : ''}
+            <h3>${html(msg('matrixEvidence.whyReviewTitle', 'Why this cell needs review'))}</h3>
+            ${renderMatrixEvidenceExplanation(risk)}
+            ${renderMatrixTechnicalDetails(risk, modelStatus, flags)}
+        </section>
+        <section class="drawer-section">
+            <h3>${html(msg('matrixEvidence.interpretationTitle', 'How to interpret these results'))}</h3>
+            ${renderInterpretationGuide('cluster', [], modelStatus)}
         </section>
         ${renderEvidenceProvenance(trend)}
         <button id="drawer-region-action" class="primary-action drawer-action" type="button">${html(msg('drawer.openUnitList', 'Open spatial-unit list'))}</button>`;
@@ -567,7 +636,6 @@ function renderUnitEvidenceCard(cluster, city, wetland) {
     const metrics = evidence.metrics || {};
     const sparse = isStructuralSparse(cluster, wetland);
     const flags = (evidence.quality_flag_ids || []).map(id => DATA.evidenceBundle._flagsById.get(id)?.flag).filter(Boolean);
-    const limitations = [...(evidence.limitations || []), ...(item.not_available || []), ...(sparse ? [msg('unit.structuralSparseModelLimit', 'BYS mangrove cannot be interpreted as an ordinary stable trend; the regional model failed.')] : [])];
     document.getElementById('unit-drawer-content').innerHTML = `
         <p class="eyebrow">${html(msg('unit.evidenceCard', 'Spatial-unit historical evidence card'))}</p>
         <h2 id="unit-drawer-title">${html(city)} · ${html(WETLAND_LABELS[wetland])}</h2>
@@ -578,7 +646,8 @@ function renderUnitEvidenceCard(cluster, city, wetland) {
             <dl class="drawer-metrics"><div><dt>${html(msg('metrics.startToEnd', 'Start → end'))}</dt><dd>${formatEvidenceNumber(metrics.start_value)} → ${formatEvidenceNumber(metrics.end_value)}</dd></div><div><dt>${html(msg('metrics.absoluteChange', 'Absolute change'))}</dt><dd>${formatEvidenceNumber(metrics.absolute_change)}</dd></div><div><dt>${html(msg('metrics.changeRate', 'Change rate'))}</dt><dd>${html(sparse ? msg('common.zeroStart', 'Not computable: start value is 0') : regionChangeLabel(metrics))}</dd></div><div><dt>${html(msg('metrics.annualSlope', 'Annual slope'))}</dt><dd>${html(sparse ? notApplicableText() : formatEvidenceNumber(metrics.slope_per_year, 2))}</dd></div><div><dt>${html(msg('metrics.sampleSize', 'Sample size'))}</dt><dd>${dynamicText(msg('metrics.yearCount', '{count} years', { count: formatEvidenceNumber(metrics.observations, 0) }))}</dd></div></dl>
         </section>
         <section class="drawer-section">
-            <h3>${html(msg('unit.limitationsUnavailableEvidence', 'Limitations and unavailable evidence'))}</h3><ul>${limitations.map(text => `<li>${html(text)}</li>`).join('')}</ul>${flags.length ? `<p>${html(msg('drawer.qualityFlags', 'Quality flags: {flags}', { flags: flags.join(', ') }))}</p>` : ''}
+            <h3>${html(msg('matrixEvidence.interpretationTitle', 'How to interpret these results'))}</h3>
+            ${renderInterpretationGuide('spatial_unit', flags, sparse ? 'failed' : '')}
         </section>
         ${renderEvidenceProvenance(evidence)}
         <section class="drawer-section"><h3>${html(msg('unit.humanReview', 'Human review'))}</h3><p>${html(msg('unit.humanReviewNote', 'This is a draft evidence card; human review status has not been persisted.'))}</p></section>`;

@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,70 @@ HISTORICAL_DIR = ROOT / "evidence/data/historical"
 MODEL_DIR = ROOT / "evidence/data/model"
 OUTPUT_PATH = ROOT / "web/web/data/evidence_bundle.json"
 SCHEMA_VERSION = "1.0.0"
+
+FEATURE_CODES_BY_LABEL = {
+    "Mean temperature": "Temp_Mean_C",
+    "Precipitation": "Precip_Sum_mm",
+    "Evaporation": "Evap_Sum_mm",
+    "Urban area": "MODIS_Urban_Area_sqkm",
+    "Impervious surface": "Impervious_sqkm",
+    "Night-time lights": "Unified_NTL_Index",
+    "GDP per capita": "GDP_per_capita",
+    "Secondary GDP share": "Secondary_GDP_Share",
+    "Total population": "Total_Population",
+    "Population density": "Pop_Density",
+    "Cropland": "Cropland_sqkm",
+}
+
+
+def evidence_parts(value: Any) -> list[str]:
+    if not isinstance(value, str) or value.strip().lower().startswith(("none", "not available")):
+        return []
+    return [part.strip() for part in value.split(";") if part.strip()]
+
+
+def parse_twfe_terms(value: Any) -> list[dict]:
+    result = []
+    pattern = re.compile(r"^(.+?)\s+([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?)\s+\(p=([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?)\)$", re.IGNORECASE)
+    for part in evidence_parts(value):
+        match = pattern.match(part)
+        if not match:
+            raise ValueError(f"unrecognized TWFE evidence term: {part}")
+        label, coefficient, p_value = match.groups()
+        result.append({"feature_code": FEATURE_CODES_BY_LABEL.get(label), "source_label": label, "coefficient": float(coefficient), "p_value": float(p_value)})
+    return result
+
+
+def parse_shap_terms(value: Any) -> list[dict]:
+    result = []
+    pattern = re.compile(r"^(.+?)\s+\(([^,]+),\s*mean\|SHAP\|=([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?)\)$", re.IGNORECASE)
+    for part in evidence_parts(value):
+        match = pattern.match(part)
+        if not match:
+            raise ValueError(f"unrecognized SHAP evidence term: {part}")
+        label, group, value_text = match.groups()
+        result.append({"feature_code": FEATURE_CODES_BY_LABEL.get(label), "source_label": label, "feature_group": group, "mean_abs_shap": float(value_text)})
+    return result
+
+
+def parse_partial_effect_terms(value: Any) -> list[dict]:
+    result = []
+    pattern = re.compile(r"^(.+?)\s+\(([^,]+),\s*elasticity=([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?),\s*range=([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?)\s*km2\)$", re.IGNORECASE)
+    for part in evidence_parts(value):
+        match = pattern.match(part)
+        if not match:
+            raise ValueError(f"unrecognized partial-effect evidence term: {part}")
+        label, group, elasticity, effect_range = match.groups()
+        result.append({"feature_code": FEATURE_CODES_BY_LABEL.get(label), "source_label": label, "feature_group": group, "elasticity": float(elasticity), "effect_range_km2": float(effect_range)})
+    return result
+
+
+def gmm_status_code(value: Any) -> str:
+    return {
+        "significant positive persistence": "SIGNIFICANT_POSITIVE_PERSISTENCE",
+        "not significant / unstable": "NOT_SIGNIFICANT_OR_UNSTABLE",
+        "not available": "NOT_AVAILABLE",
+    }.get(str(value).strip().lower(), "UNKNOWN")
 
 
 def sha256(path: Path) -> str:
@@ -168,6 +233,16 @@ def build_bundle() -> dict:
                 "Insufficient": {"label": "Insufficient data", "state": "insufficient-data", "note": "Insufficient-data review category"},
             }
             display = display_map[raw_risk_row["Figure14_Category"]]
+            structured_evidence = {
+                "twfe_negative_terms": parse_twfe_terms(raw_risk_row["Regional_TWFE_significant_negative_terms_p_lt_0_10"]),
+                "shap_top3": parse_shap_terms(raw_risk_row["Cluster_SHAP_top3"]),
+                "partial_effect_top3": parse_partial_effect_terms(raw_risk_row["Cluster_partial_effect_top3_by_elasticity"]),
+                "gmm": {
+                    "status_code": gmm_status_code(raw_risk_row["Wetland_GMM_lag_status"]),
+                    "coefficient": raw_risk_row["Wetland_GMM_lag_coef"],
+                    "p_value": raw_risk_row["Wetland_GMM_lag_p_value"],
+                },
+            }
             risk_row = {
                 "Wetland": raw_risk_row["Wetland"],
                 "Wetland_Code": raw_risk_row["Wetland_Code"],
@@ -184,6 +259,7 @@ def build_bundle() -> dict:
                 "Wetland_GMM_lag_p_value": raw_risk_row["Wetland_GMM_lag_p_value"],
                 "Evidence_Support_Grade": raw_risk_row["Evidence_Support_Grade"],
                 "Evidence_Notes": raw_risk_row["Evidence_Notes"],
+                "Structured_Evidence": structured_evidence,
                 "Display_Label": display["label"],
                 "Display_State": display["state"],
                 "Display_Note": display["note"],
@@ -235,7 +311,7 @@ def build_bundle() -> dict:
 def main() -> None:
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     bundle = build_bundle()
-    OUTPUT_PATH.write_text(json.dumps(bundle, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    OUTPUT_PATH.write_bytes((json.dumps(bundle, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
     print(f"PASS evidence bundle: {len(bundle['cluster_summary'])} cluster summaries, {len(bundle['unit_evidence'])} unit evidence, {len(bundle['quality_flags'])} quality flags, {len(bundle['model_evidence'])} model evidence")
 
 

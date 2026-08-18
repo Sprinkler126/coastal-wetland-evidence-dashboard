@@ -77,6 +77,9 @@ assert.equal(app.i18n.label('wetland', 'UnmappedWetland'), 'UnmappedWetland', 'u
 
 assert.equal(app.i18n.t('common.global'), 'All samples', 'global means all samples, not the world');
 assert.equal(app.i18n.t('nav.methods'), 'Data & Methods');
+assert.equal(app.i18n.t('matrixEvidence.whyReviewTitle'), 'Why this cell needs review');
+assert.equal(app.i18n.t('matrixEvidence.interpretationTitle'), 'How to interpret these results');
+assert.match(app.i18n.t('matrixEvidence.shap.found', { features: 'Cropland' }), /Importance does not imply causality/);
 assert.equal(app.i18n.t('scope.global'), 'All samples');
 assert.match(app.i18n.t('figure14.boundary'), /not future-risk probabilities/i);
 assert.doesNotMatch(app.i18n.t('figure14.boundary'), /future[- ]risk probability\.$/i, 'boundary is a statement, not a probability value');
@@ -92,6 +95,9 @@ assert.equal(app.i18n.getLocale(), 'zh-CN');
 assert.equal(app.storage.get(app.i18n.storageKey), 'zh-CN');
 assert.equal(app.i18n.label('wetland', 'Mangrove'), '红树林');
 assert.equal(app.i18n.t('common.global'), '全样本');
+assert.equal(app.i18n.t('matrixEvidence.whyReviewTitle'), '为什么这个单元值得复核');
+assert.equal(app.i18n.t('matrixEvidence.interpretationTitle'), '如何理解这些结果');
+assert.match(app.i18n.t('matrixEvidence.shap.found', { features: '耕地面积' }), /重要性不代表因果关系/);
 assert.match(app.i18n.t('figure14.boundary'), /不代表未来风险概率/);
 assert.equal(app.i18n.formatLocalizedPercent(0.1234), '12.3%');
 assert.equal(app.events.at(-1).type, 'app:localechange');

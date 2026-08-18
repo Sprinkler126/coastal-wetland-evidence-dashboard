@@ -65,6 +65,7 @@ const context = vm.createContext({
     WETLAND_LABELS: { Mangrove: 'Mangrove', Saltmarsh: 'Saltmarsh', Seagrass: 'Seagrass', TidalFlat: 'Tidal flat' },
     CLUSTERS: ['BYS', 'YRD', 'WTS', 'PRD', 'BG'],
     CLUSTER_LABELS: { BYS: 'Bohai Sea', YRD: 'Yangtze River Delta', WTS: 'West Taiwan Strait', PRD: 'Pearl River Delta', BG: 'Beibu Gulf' },
+    FEATURE_LABELS: { Cropland_sqkm: 'Cropland Area', MODIS_Urban_Area_sqkm: 'Urban Area', Total_Population: 'Total Population' },
     getPageDatasets: pageName => pageDatasets[pageName] || [],
     getDatasetState: key => datasetStates.get(key) || { status: 'loaded' },
     ensureData(keys) {
@@ -76,7 +77,7 @@ const context = vm.createContext({
             };
         });
     },
-    localizedText: (_key, fallback) => fallback,
+    localizedText: (_key, fallback, values = {}) => Object.entries(values).reduce((text, [key, value]) => text.replaceAll(`{${key}}`, String(value)), fallback),
     escapeHtml: value => String(value),
     formatEvidenceNumber: value => String(value),
     DATA: {
@@ -96,7 +97,7 @@ const context = vm.createContext({
     setTimeout,
     requestAnimationFrame: callback => callback(),
 });
-vm.runInContext(`${appSource}\nrenderPageContent = pageName => __rendered.push(pageName); resizeActiveCharts = () => {}; getEvidenceSummary = (wetland, cluster) => DATA.evidenceBundle.cluster_summary.find(item => item.wetland === wetland && item.cluster === cluster) || {}; this.__showPage = showPage; this.__renderOverviewMatrix = renderOverviewMatrix; this.__renderOverviewQuality = renderOverviewQuality; this.__renderEvidenceProvenance = renderEvidenceProvenance; this.__screeningCellLabel = screeningCellLabel; this.__evidenceSupportGradeDisplay = evidenceSupportGradeDisplay;`, context);
+vm.runInContext(`${appSource}\nrenderPageContent = pageName => __rendered.push(pageName); resizeActiveCharts = () => {}; getEvidenceSummary = (wetland, cluster) => DATA.evidenceBundle.cluster_summary.find(item => item.wetland === wetland && item.cluster === cluster) || {}; this.__showPage = showPage; this.__renderOverviewMatrix = renderOverviewMatrix; this.__renderOverviewQuality = renderOverviewQuality; this.__renderEvidenceProvenance = renderEvidenceProvenance; this.__renderMatrixEvidenceExplanation = renderMatrixEvidenceExplanation; this.__renderMatrixTechnicalDetails = renderMatrixTechnicalDetails; this.__renderInterpretationGuide = renderInterpretationGuide; this.__screeningCellLabel = screeningCellLabel; this.__evidenceSupportGradeDisplay = evidenceSupportGradeDisplay;`, context);
 context.__rendered = rendered;
 
 const provenanceHtml = context.__renderEvidenceProvenance({
@@ -114,9 +115,39 @@ assert.match(provenanceTechnical, /unit_trends\.csv/);
 assert.match(provenanceTechnical, /abc123/);
 assert.match(provenanceTechnical, /coastal-wetland-evidence-contract/);
 assert.match(provenanceTechnical, /bundle-test-id/);
+const structuredRisk = {
+    Sample_N_city_year: 154,
+    Regional_TWFE_significant_negative_terms_p_lt_0_10: 'Cropland -0.0003342 (p=6.49e-07)',
+    Cluster_SHAP_top3: 'Urban area (Urbanization, mean|SHAP|=0.4495)',
+    Cluster_partial_effect_top3_by_elasticity: 'Total population (Population, elasticity=0.249, range=5.27 km2)',
+    Structured_Evidence: {
+        twfe_negative_terms: [{ feature_code: 'Cropland_sqkm', coefficient: -0.0003342, p_value: 6.49e-7 }],
+        shap_top3: [{ feature_code: 'MODIS_Urban_Area_sqkm', mean_abs_shap: 0.4495 }],
+        partial_effect_top3: [{ feature_code: 'Total_Population', elasticity: 0.249, effect_range_km2: 5.27 }],
+        gmm: { status_code: 'NOT_SIGNIFICANT_OR_UNSTABLE', coefficient: -46.3256, p_value: 0.9798 },
+    },
+};
+const evidenceExplanation = context.__renderMatrixEvidenceExplanation(structuredRisk);
+assert.match(evidenceExplanation, /Historical association/);
+assert.match(evidenceExplanation, /Cropland Area/);
+assert.match(evidenceExplanation, /Model focus/);
+assert.match(evidenceExplanation, /Urban Area/);
+assert.match(evidenceExplanation, /Response sensitivity/);
+assert.match(evidenceExplanation, /Total Population/);
+assert.doesNotMatch(evidenceExplanation, /-0\.0003342|6\.49e-07|mean\|SHAP\||elasticity=/, 'reader-facing evidence cards omit raw model parameters');
+const technicalEvidence = context.__renderMatrixTechnicalDetails(structuredRisk, 'estimable');
+assert.match(technicalEvidence, /Cropland -0\.0003342/);
+assert.match(technicalEvidence, /mean\|SHAP\|=0\.4495/);
+assert.match(technicalEvidence, /Model parameters and source records/);
+const interpretationGuide = context.__renderInterpretationGuide('cluster', [], 'estimable');
+assert.match(interpretationGuide, /What this can show/);
+assert.match(interpretationGuide, /What this cannot show/);
+assert.match(interpretationGuide, /future-risk probability/);
 const overviewDrawerSource = appSource.slice(appSource.indexOf('function renderEvidenceDrawer'), appSource.indexOf('function openEvidenceDrawer'));
 const unitDrawerSource = appSource.slice(appSource.indexOf('function renderUnitEvidenceCard'), appSource.indexOf('function openUnitEvidenceCard'));
 assert.match(overviewDrawerSource, /renderEvidenceProvenance\(trend\)/, 'the overview drawer uses the shared progressive-disclosure trace');
+assert.match(overviewDrawerSource, /renderMatrixEvidenceExplanation\(risk\)/, 'the overview drawer renders localized evidence explanations');
+assert.match(overviewDrawerSource, /renderInterpretationGuide\('cluster'/, 'the overview drawer separates supported and unsupported interpretations');
 assert.match(unitDrawerSource, /renderEvidenceProvenance\(evidence\)/, 'the unit drawer uses the shared progressive-disclosure trace');
 assert.doesNotMatch(`${overviewDrawerSource}${unitDrawerSource}`, /source\?\.path|source\?\.sha256|unit\.contract/, 'drawers do not place raw technical identifiers directly in their main content');
 

@@ -45,6 +45,7 @@ assert.equal(evidence.generated_by.script, 'scripts/evidence/build_evidence_bund
 assert.equal(contract.contract_id, evidence.contract_id);
 assert.equal(contract.contract_version, evidence.contract_version);
 assert.equal(evidenceSchema.contract_reference, 'evidence/contracts/evidence_contract.json');
+assert.deepEqual(evidenceSchema.required_screening_evidence_fields, ['twfe_negative_terms', 'shap_top3', 'partial_effect_top3', 'gmm.status_code']);
 assert.doesNotMatch(JSON.stringify({ contract, evidenceSchema, generatedBy: evidence.generated_by }), /day\s*\d+/i, 'active evidence contracts do not use stage-number naming');
 
 for (const source of evidence.source_metadata) {
@@ -73,6 +74,16 @@ const unique = (items, key, description) => {
 };
 unique(evidence.cluster_summary, item => `${item.wetland_code}::${item.cluster_code}`, 'cluster summary keys');
 unique(evidence.unit_evidence, item => `${item.cluster_code}::${item.city}::${item.wetland_code}`, 'unit evidence keys');
+const validGmmStatuses = new Set(['SIGNIFICANT_POSITIVE_PERSISTENCE', 'NOT_SIGNIFICANT_OR_UNSTABLE', 'NOT_AVAILABLE']);
+for (const summary of evidence.cluster_summary) {
+    const structured = summary.risk_matrix?.Structured_Evidence;
+    assert.ok(structured, `${summary.cluster_code}/${summary.wetland_code} has structured matrix evidence`);
+    for (const key of ['twfe_negative_terms', 'shap_top3', 'partial_effect_top3']) {
+        assert.ok(Array.isArray(structured[key]), `${summary.cluster_code}/${summary.wetland_code} ${key} is an array`);
+        for (const item of structured[key]) assert.ok(evidence.enumerations.drivers.includes(item.feature_code), `${key} uses a canonical feature code`);
+    }
+    assert.ok(validGmmStatuses.has(structured.gmm?.status_code), `${summary.cluster_code}/${summary.wetland_code} uses a stable GMM status code`);
+}
 
 const canonicalEvidence = [];
 for (const summary of evidence.cluster_summary) {

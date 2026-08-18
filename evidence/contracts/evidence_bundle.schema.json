@@ -27,6 +27,12 @@
     "metrics",
     "limitations"
   ],
+  "required_screening_evidence_fields": [
+    "twfe_negative_terms",
+    "shap_top3",
+    "partial_effect_top3",
+    "gmm.status_code"
+  ],
   "evidence_types": [
     "FACT",
     "ASSOCIATION",
@@ -48,6 +54,7 @@
     "Every evidence record has period, scale, method, source and non-empty limitations.",
     "SHAP and partial-effect are model attribution or response summaries, not causal effects.",
     "Matrix categories are synthesis-based screening/review categories, not future risk probabilities.",
+    "Reader-facing evidence is generated from canonical feature codes and stable status codes; raw source strings remain audit-only.",
     "No future risk probability is produced.",
     "Cluster evidence is not downscaled to spatial units."
   ]

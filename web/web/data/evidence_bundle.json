@@ -215,6 +215,82 @@
         "Wetland_GMM_lag_p_value": 0.9798,
         "Evidence_Support_Grade": "moderate support",
         "Evidence_Notes": "regional TWFE has at least one significant negative association | negative TWFE group overlaps with cluster top-3 SHAP group(s): Agriculture, Urbanization | GMM persistence is not significant/unstable for this wetland",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "coefficient": -0.0003342,
+              "p_value": 6.49e-07
+            },
+            {
+              "feature_code": "GDP_per_capita",
+              "source_label": "GDP per capita",
+              "coefficient": -7.111e-06,
+              "p_value": 0.000702
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "coefficient": -0.01067,
+              "p_value": 0.000813
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "coefficient": -0.003641,
+              "p_value": 0.0802
+            }
+          ],
+          "shap_top3": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.6093
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.4495
+            },
+            {
+              "feature_code": "Impervious_sqkm",
+              "source_label": "Impervious surface",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.07623
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 1.21,
+              "effect_range_km2": 25.5
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 0.748,
+              "effect_range_km2": 15.8
+            },
+            {
+              "feature_code": "Total_Population",
+              "source_label": "Total population",
+              "feature_group": "Population",
+              "elasticity": 0.249,
+              "effect_range_km2": 5.27
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_SIGNIFICANT_OR_UNSTABLE",
+            "coefficient": -46.3256,
+            "p_value": 0.9798
+          }
+        },
         "Display_Label": "High-priority review",
         "Display_State": "high",
         "Display_Note": "High-priority evidence review category"
@@ -303,6 +379,57 @@
         "Wetland_GMM_lag_p_value": null,
         "Evidence_Support_Grade": "weak direct quantitative support",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.6498
+            },
+            {
+              "feature_code": "Total_Population",
+              "source_label": "Total population",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.1763
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.1346
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 7.62,
+              "effect_range_km2": 65.2
+            },
+            {
+              "feature_code": "Total_Population",
+              "source_label": "Total population",
+              "feature_group": "Population",
+              "elasticity": 1.22,
+              "effect_range_km2": 10.4
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 0.515,
+              "effect_range_km2": 4.4
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_AVAILABLE",
+            "coefficient": null,
+            "p_value": null
+          }
+        },
         "Display_Label": "High-priority review",
         "Display_State": "high",
         "Display_Note": "High-priority evidence review category"
@@ -391,6 +518,57 @@
         "Wetland_GMM_lag_p_value": null,
         "Evidence_Support_Grade": "weak direct quantitative support",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "feature_group": "Climate",
+              "mean_abs_shap": 0.2877
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.2252
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.2213
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 0.949,
+              "effect_range_km2": 13.9
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 0.446,
+              "effect_range_km2": 6.56
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "elasticity": 0.126,
+              "effect_range_km2": 1.86
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_AVAILABLE",
+            "coefficient": null,
+            "p_value": null
+          }
+        },
         "Display_Label": "Medium-priority review",
         "Display_State": "medium",
         "Display_Note": "Medium-priority evidence review category"
@@ -479,6 +657,82 @@
         "Wetland_GMM_lag_p_value": 0.0205,
         "Evidence_Support_Grade": "moderate support",
         "Evidence_Notes": "regional TWFE has at least one significant negative association | top SHAP groups do not clearly overlap with significant negative TWFE groups | wetland-level GMM suggests positive persistence/path dependence",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [
+            {
+              "feature_code": "GDP_per_capita",
+              "source_label": "GDP per capita",
+              "coefficient": -5.8e-06,
+              "p_value": 2.44e-07
+            },
+            {
+              "feature_code": "Total_Population",
+              "source_label": "Total population",
+              "coefficient": -7.009e-07,
+              "p_value": 0.000109
+            },
+            {
+              "feature_code": "Precip_Sum_mm",
+              "source_label": "Precipitation",
+              "coefficient": -0.0001772,
+              "p_value": 0.000924
+            },
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "coefficient": -0.1475,
+              "p_value": 0.0279
+            }
+          ],
+          "shap_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.4712
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.1544
+            },
+            {
+              "feature_code": "Unified_NTL_Index",
+              "source_label": "Night-time lights",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.05032
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 3.37,
+              "effect_range_km2": 64.7
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 0.483,
+              "effect_range_km2": 9.28
+            },
+            {
+              "feature_code": "Impervious_sqkm",
+              "source_label": "Impervious surface",
+              "feature_group": "Urbanization",
+              "elasticity": 0.312,
+              "effect_range_km2": 5.99
+            }
+          ],
+          "gmm": {
+            "status_code": "SIGNIFICANT_POSITIVE_PERSISTENCE",
+            "coefficient": 1.3073,
+            "p_value": 0.0205
+          }
+        },
         "Display_Label": "High-priority review",
         "Display_State": "high",
         "Display_Note": "High-priority evidence review category"
@@ -568,6 +822,57 @@
         "Wetland_GMM_lag_p_value": 0.9798,
         "Evidence_Support_Grade": "cautionary/interpretive",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland | original figure flags evidence/data limitation; retain as caution rather than risk estimate",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "feature_group": "Climate",
+              "mean_abs_shap": 0.0
+            },
+            {
+              "feature_code": "Precip_Sum_mm",
+              "source_label": "Precipitation",
+              "feature_group": "Climate",
+              "mean_abs_shap": 0.0
+            },
+            {
+              "feature_code": "Evap_Sum_mm",
+              "source_label": "Evaporation",
+              "feature_group": "Climate",
+              "mean_abs_shap": 0.0
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "feature_group": "Climate",
+              "elasticity": 0.0,
+              "effect_range_km2": 0.0
+            },
+            {
+              "feature_code": "Precip_Sum_mm",
+              "source_label": "Precipitation",
+              "feature_group": "Climate",
+              "elasticity": 0.0,
+              "effect_range_km2": 0.0
+            },
+            {
+              "feature_code": "Evap_Sum_mm",
+              "source_label": "Evaporation",
+              "feature_group": "Climate",
+              "elasticity": 0.0,
+              "effect_range_km2": 0.0
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_SIGNIFICANT_OR_UNSTABLE",
+            "coefficient": -46.3256,
+            "p_value": 0.9798
+          }
+        },
         "Display_Label": "Insufficient data",
         "Display_State": "insufficient-data",
         "Display_Note": "Insufficient-data review category"
@@ -656,6 +961,57 @@
         "Wetland_GMM_lag_p_value": null,
         "Evidence_Support_Grade": "weak direct quantitative support",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.6602
+            },
+            {
+              "feature_code": "Total_Population",
+              "source_label": "Total population",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.4138
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.1786
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 0.967,
+              "effect_range_km2": 127.0
+            },
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "feature_group": "Climate",
+              "elasticity": 0.911,
+              "effect_range_km2": 120.0
+            },
+            {
+              "feature_code": "Total_Population",
+              "source_label": "Total population",
+              "feature_group": "Population",
+              "elasticity": 0.878,
+              "effect_range_km2": 116.0
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_AVAILABLE",
+            "coefficient": null,
+            "p_value": null
+          }
+        },
         "Display_Label": "Medium-priority review",
         "Display_State": "medium",
         "Display_Note": "Medium-priority evidence review category"
@@ -744,6 +1100,57 @@
         "Wetland_GMM_lag_p_value": null,
         "Evidence_Support_Grade": "weak direct quantitative support",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "Total_Population",
+              "source_label": "Total population",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.2881
+            },
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "feature_group": "Climate",
+              "mean_abs_shap": 0.2447
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.2372
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "feature_group": "Climate",
+              "elasticity": 1.9,
+              "effect_range_km2": 3.46
+            },
+            {
+              "feature_code": "GDP_per_capita",
+              "source_label": "GDP per capita",
+              "feature_group": "Economy",
+              "elasticity": 1.42,
+              "effect_range_km2": 2.59
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 0.818,
+              "effect_range_km2": 1.49
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_AVAILABLE",
+            "coefficient": null,
+            "p_value": null
+          }
+        },
         "Display_Label": "High-priority review",
         "Display_State": "high",
         "Display_Note": "High-priority evidence review category"
@@ -832,6 +1239,70 @@
         "Wetland_GMM_lag_p_value": 0.0205,
         "Evidence_Support_Grade": "cautionary/interpretive",
         "Evidence_Notes": "regional TWFE has at least one significant negative association | negative TWFE group overlaps with cluster top-3 SHAP group(s): Urbanization | wetland-level GMM suggests positive persistence/path dependence | original figure flags evidence/data limitation; retain as caution rather than risk estimate",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [
+            {
+              "feature_code": "Precip_Sum_mm",
+              "source_label": "Precipitation",
+              "coefficient": -0.0005239,
+              "p_value": 0.000509
+            },
+            {
+              "feature_code": "Unified_NTL_Index",
+              "source_label": "Night-time lights",
+              "coefficient": -0.03322,
+              "p_value": 0.0339
+            }
+          ],
+          "shap_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.3706
+            },
+            {
+              "feature_code": "Total_Population",
+              "source_label": "Total population",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.2424
+            },
+            {
+              "feature_code": "Impervious_sqkm",
+              "source_label": "Impervious surface",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.122
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 3.74,
+              "effect_range_km2": 170.0
+            },
+            {
+              "feature_code": "Total_Population",
+              "source_label": "Total population",
+              "feature_group": "Population",
+              "elasticity": 1.37,
+              "effect_range_km2": 62.3
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 0.822,
+              "effect_range_km2": 37.4
+            }
+          ],
+          "gmm": {
+            "status_code": "SIGNIFICANT_POSITIVE_PERSISTENCE",
+            "coefficient": 1.3073,
+            "p_value": 0.0205
+          }
+        },
         "Display_Label": "Insufficient data",
         "Display_State": "insufficient-data",
         "Display_Note": "Insufficient-data review category"
@@ -920,6 +1391,82 @@
         "Wetland_GMM_lag_p_value": 0.9798,
         "Evidence_Support_Grade": "moderate support",
         "Evidence_Notes": "regional TWFE has at least one significant negative association | negative TWFE group overlaps with cluster top-3 SHAP group(s): Urbanization | GMM persistence is not significant/unstable for this wetland",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "coefficient": -0.0007271,
+              "p_value": 5.4e-06
+            },
+            {
+              "feature_code": "Unified_NTL_Index",
+              "source_label": "Night-time lights",
+              "coefficient": -0.01694,
+              "p_value": 0.0144
+            },
+            {
+              "feature_code": "Impervious_sqkm",
+              "source_label": "Impervious surface",
+              "coefficient": -0.0005281,
+              "p_value": 0.0368
+            },
+            {
+              "feature_code": "Secondary_GDP_Share",
+              "source_label": "Secondary GDP share",
+              "coefficient": -0.003796,
+              "p_value": 0.0559
+            }
+          ],
+          "shap_top3": [
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.3137
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.1569
+            },
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "feature_group": "Climate",
+              "mean_abs_shap": 0.1376
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "elasticity": 10.1,
+              "effect_range_km2": 1.36
+            },
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "feature_group": "Climate",
+              "elasticity": 5.05,
+              "effect_range_km2": 0.68
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 5.05,
+              "effect_range_km2": 0.68
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_SIGNIFICANT_OR_UNSTABLE",
+            "coefficient": -46.3256,
+            "p_value": 0.9798
+          }
+        },
         "Display_Label": "Medium-priority review",
         "Display_State": "medium",
         "Display_Note": "Medium-priority evidence review category"
@@ -1008,6 +1555,57 @@
         "Wetland_GMM_lag_p_value": null,
         "Evidence_Support_Grade": "weak direct quantitative support",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.6775
+            },
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "feature_group": "Climate",
+              "mean_abs_shap": 0.3601
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.2075
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "elasticity": 5.46,
+              "effect_range_km2": 52.1
+            },
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "feature_group": "Climate",
+              "elasticity": 0.794,
+              "effect_range_km2": 7.58
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 0.513,
+              "effect_range_km2": 4.9
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_AVAILABLE",
+            "coefficient": null,
+            "p_value": null
+          }
+        },
         "Display_Label": "High-priority review",
         "Display_State": "high",
         "Display_Note": "High-priority evidence review category"
@@ -1096,6 +1694,57 @@
         "Wetland_GMM_lag_p_value": null,
         "Evidence_Support_Grade": "weak direct quantitative support",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.4978
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.3628
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.2627
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "elasticity": 4.09,
+              "effect_range_km2": 13.4
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 0.785,
+              "effect_range_km2": 2.57
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 0.535,
+              "effect_range_km2": 1.75
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_AVAILABLE",
+            "coefficient": null,
+            "p_value": null
+          }
+        },
         "Display_Label": "Medium-priority review",
         "Display_State": "medium",
         "Display_Note": "Medium-priority evidence review category"
@@ -1184,6 +1833,70 @@
         "Wetland_GMM_lag_p_value": 0.0205,
         "Evidence_Support_Grade": "moderate support",
         "Evidence_Notes": "regional TWFE has at least one significant negative association | top SHAP groups do not clearly overlap with significant negative TWFE groups | wetland-level GMM suggests positive persistence/path dependence",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [
+            {
+              "feature_code": "GDP_per_capita",
+              "source_label": "GDP per capita",
+              "coefficient": -3.876e-06,
+              "p_value": 0.0116
+            },
+            {
+              "feature_code": "Secondary_GDP_Share",
+              "source_label": "Secondary GDP share",
+              "coefficient": -0.005743,
+              "p_value": 0.0737
+            }
+          ],
+          "shap_top3": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.3705
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.1204
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.1131
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 0.654,
+              "effect_range_km2": 10.6
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "elasticity": 0.461,
+              "effect_range_km2": 7.49
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 0.375,
+              "effect_range_km2": 6.09
+            }
+          ],
+          "gmm": {
+            "status_code": "SIGNIFICANT_POSITIVE_PERSISTENCE",
+            "coefficient": 1.3073,
+            "p_value": 0.0205
+          }
+        },
         "Display_Label": "Medium-priority review",
         "Display_State": "medium",
         "Display_Note": "Medium-priority evidence review category"
@@ -1272,6 +1985,57 @@
         "Wetland_GMM_lag_p_value": 0.9798,
         "Evidence_Support_Grade": "cautionary/interpretive",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland | original figure treats weak/complex macro-variable fit as decoupling rather than low risk",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.3363
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.1477
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.1322
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 2.49,
+              "effect_range_km2": 1.58
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "elasticity": 1.42,
+              "effect_range_km2": 0.9
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 1.1,
+              "effect_range_km2": 0.7
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_SIGNIFICANT_OR_UNSTABLE",
+            "coefficient": -46.3256,
+            "p_value": 0.9798
+          }
+        },
         "Display_Label": "Decoupling review",
         "Display_State": "decoupling",
         "Display_Note": "Decoupling evidence review category"
@@ -1360,6 +2124,57 @@
         "Wetland_GMM_lag_p_value": null,
         "Evidence_Support_Grade": "weak direct quantitative support",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "Unified_NTL_Index",
+              "source_label": "Night-time lights",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.3333
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.2659
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.1095
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 1.92,
+              "effect_range_km2": 6.81
+            },
+            {
+              "feature_code": "Unified_NTL_Index",
+              "source_label": "Night-time lights",
+              "feature_group": "Urbanization",
+              "elasticity": 1.38,
+              "effect_range_km2": 4.89
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 0.469,
+              "effect_range_km2": 1.66
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_AVAILABLE",
+            "coefficient": null,
+            "p_value": null
+          }
+        },
         "Display_Label": "Medium-priority review",
         "Display_State": "medium",
         "Display_Note": "Medium-priority evidence review category"
@@ -1448,6 +2263,57 @@
         "Wetland_GMM_lag_p_value": null,
         "Evidence_Support_Grade": "cautionary/interpretive",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland | original figure flags evidence/data limitation; retain as caution rather than risk estimate",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.467
+            },
+            {
+              "feature_code": "Impervious_sqkm",
+              "source_label": "Impervious surface",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.1253
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.1195
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 13.8,
+              "effect_range_km2": 14.3
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 1.41,
+              "effect_range_km2": 1.46
+            },
+            {
+              "feature_code": "Impervious_sqkm",
+              "source_label": "Impervious surface",
+              "feature_group": "Urbanization",
+              "elasticity": 1.29,
+              "effect_range_km2": 1.33
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_AVAILABLE",
+            "coefficient": null,
+            "p_value": null
+          }
+        },
         "Display_Label": "Insufficient data",
         "Display_State": "insufficient-data",
         "Display_Note": "Insufficient-data review category"
@@ -1536,6 +2402,82 @@
         "Wetland_GMM_lag_p_value": 0.0205,
         "Evidence_Support_Grade": "strong multi-source support",
         "Evidence_Notes": "regional TWFE has at least one significant negative association | negative TWFE group overlaps with cluster top-3 SHAP group(s): Agriculture, Population, Urbanization | wetland-level GMM suggests positive persistence/path dependence",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "coefficient": -0.0005873,
+              "p_value": 0.0
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "coefficient": -0.0008995,
+              "p_value": 5.8e-09
+            },
+            {
+              "feature_code": "Impervious_sqkm",
+              "source_label": "Impervious surface",
+              "coefficient": -0.001587,
+              "p_value": 0.00302
+            },
+            {
+              "feature_code": "Unified_NTL_Index",
+              "source_label": "Night-time lights",
+              "coefficient": -0.0115,
+              "p_value": 0.0271
+            }
+          ],
+          "shap_top3": [
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.4293
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.1872
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.06875
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 1.16,
+              "effect_range_km2": 30.4
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "elasticity": 0.645,
+              "effect_range_km2": 16.9
+            },
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 0.342,
+              "effect_range_km2": 8.97
+            }
+          ],
+          "gmm": {
+            "status_code": "SIGNIFICANT_POSITIVE_PERSISTENCE",
+            "coefficient": 1.3073,
+            "p_value": 0.0205
+          }
+        },
         "Display_Label": "Medium-priority review",
         "Display_State": "medium",
         "Display_Note": "Medium-priority evidence review category"
@@ -1624,6 +2566,57 @@
         "Wetland_GMM_lag_p_value": 0.9798,
         "Evidence_Support_Grade": "weak direct quantitative support",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.07639
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.03761
+            },
+            {
+              "feature_code": "Total_Population",
+              "source_label": "Total population",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.03166
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 10.2,
+              "effect_range_km2": 0.3
+            },
+            {
+              "feature_code": "Precip_Sum_mm",
+              "source_label": "Precipitation",
+              "feature_group": "Climate",
+              "elasticity": 3.73,
+              "effect_range_km2": 0.11
+            },
+            {
+              "feature_code": "Secondary_GDP_Share",
+              "source_label": "Secondary GDP share",
+              "feature_group": "Economy",
+              "elasticity": 1.36,
+              "effect_range_km2": 0.04
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_SIGNIFICANT_OR_UNSTABLE",
+            "coefficient": -46.3256,
+            "p_value": 0.9798
+          }
+        },
         "Display_Label": "Medium-priority review",
         "Display_State": "medium",
         "Display_Note": "Medium-priority evidence review category"
@@ -1712,6 +2705,57 @@
         "Wetland_GMM_lag_p_value": null,
         "Evidence_Support_Grade": "weak direct quantitative support",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.5525
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.3858
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.3581
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 1.5,
+              "effect_range_km2": 19.7
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "elasticity": 0.858,
+              "effect_range_km2": 11.3
+            },
+            {
+              "feature_code": "Total_Population",
+              "source_label": "Total population",
+              "feature_group": "Population",
+              "elasticity": 0.581,
+              "effect_range_km2": 7.65
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_AVAILABLE",
+            "coefficient": null,
+            "p_value": null
+          }
+        },
         "Display_Label": "High-priority review",
         "Display_State": "high",
         "Display_Note": "High-priority evidence review category"
@@ -1800,6 +2844,57 @@
         "Wetland_GMM_lag_p_value": null,
         "Evidence_Support_Grade": "weak direct quantitative support",
         "Evidence_Notes": "no significant negative regional TWFE association at p<0.10 | top SHAP groups do not clearly overlap with significant negative TWFE groups | GMM persistence is not significant/unstable for this wetland",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [],
+          "shap_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.3101
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.2084
+            },
+            {
+              "feature_code": "Impervious_sqkm",
+              "source_label": "Impervious surface",
+              "feature_group": "Urbanization",
+              "mean_abs_shap": 0.1901
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "MODIS_Urban_Area_sqkm",
+              "source_label": "Urban area",
+              "feature_group": "Urbanization",
+              "elasticity": 0.713,
+              "effect_range_km2": 3.98
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "elasticity": 0.66,
+              "effect_range_km2": 3.68
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 0.66,
+              "effect_range_km2": 3.68
+            }
+          ],
+          "gmm": {
+            "status_code": "NOT_AVAILABLE",
+            "coefficient": null,
+            "p_value": null
+          }
+        },
         "Display_Label": "Medium-priority review",
         "Display_State": "medium",
         "Display_Note": "Medium-priority evidence review category"
@@ -1888,6 +2983,64 @@
         "Wetland_GMM_lag_p_value": 0.0205,
         "Evidence_Support_Grade": "strong multi-source support",
         "Evidence_Notes": "regional TWFE has at least one significant negative association | negative TWFE group overlaps with cluster top-3 SHAP group(s): Climate | wetland-level GMM suggests positive persistence/path dependence",
+        "Structured_Evidence": {
+          "twfe_negative_terms": [
+            {
+              "feature_code": "Precip_Sum_mm",
+              "source_label": "Precipitation",
+              "coefficient": -0.0001036,
+              "p_value": 0.077
+            }
+          ],
+          "shap_top3": [
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "mean_abs_shap": 0.3645
+            },
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "feature_group": "Climate",
+              "mean_abs_shap": 0.2258
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "mean_abs_shap": 0.1736
+            }
+          ],
+          "partial_effect_top3": [
+            {
+              "feature_code": "Temp_Mean_C",
+              "source_label": "Mean temperature",
+              "feature_group": "Climate",
+              "elasticity": 0.987,
+              "effect_range_km2": 21.4
+            },
+            {
+              "feature_code": "Pop_Density",
+              "source_label": "Population density",
+              "feature_group": "Population",
+              "elasticity": 0.709,
+              "effect_range_km2": 15.4
+            },
+            {
+              "feature_code": "Cropland_sqkm",
+              "source_label": "Cropland",
+              "feature_group": "Agriculture",
+              "elasticity": 0.553,
+              "effect_range_km2": 12.0
+            }
+          ],
+          "gmm": {
+            "status_code": "SIGNIFICANT_POSITIVE_PERSISTENCE",
+            "coefficient": 1.3073,
+            "p_value": 0.0205
+          }
+        },
         "Display_Label": "High-priority review",
         "Display_State": "high",
         "Display_Note": "High-priority evidence review category"
