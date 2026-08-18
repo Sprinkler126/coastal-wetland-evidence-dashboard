@@ -183,7 +183,7 @@
             <li><span>03</span><div><strong data-i18n="methods.flow3Title">统一字段与单位</strong><p data-i18n="methods.flow3Copy">将面积统一为 km²、温度转为 ℃、水量转为 mm，并协调跨传感器夜灯序列。</p></div></li>
             <li><span>04</span><div><strong data-i18n="methods.flow4Title">组装主面板</strong><p data-i18n="methods.flow4Copy">合并为 2001–2022 年的空间单元—年份面板，并加入经济、不透水面和耕地等分析字段。</p></div></li>
             <li><span>05</span><div><strong data-i18n="methods.flow5Title">质量检查与建模</strong><p data-i18n="methods.flow5Copy">生成质量标记、单元与城市群趋势，训练区域模型并计算 SHAP、依赖关系和部分效应。</p></div></li>
-            <li><span>06</span><div><strong data-i18n="methods.flow6Title">发布证据产品</strong><p data-i18n="methods.flow6Copy">把结果写入 evidence bundle 和模型 JSON，以 manifest 记录版本、文件大小、SHA-256 与页面用途。</p></div></li>
+            <li><span>06</span><div><strong data-i18n="methods.flow6Title">发布证据产品</strong><p data-i18n="methods.flow6Copy">把结果整理为网页数据包，并通过数据清单记录版本、文件完整性与页面用途。</p></div></li>
         </ol>
     </section>
 
@@ -219,13 +219,14 @@
             <table class="methods-table">
                 <thead><tr><th data-i18n="methods.outputLayer">层级</th><th data-i18n="methods.outputArtifact">代表产物</th><th data-i18n="methods.outputPurpose">作用</th><th data-i18n="methods.outputTrace">可追溯性</th></tr></thead>
                 <tbody>
-                    <tr><td data-i18n="methods.outputCollection">采集层</td><td>GEE CSV exports</td><td data-i18n="methods.outputCollectionPurpose">保存逐年、逐空间单元的湿地与驱动变量</td><td data-i18n="methods.outputCollectionTrace">脚本保留数据集 ID、字段和处理尺度</td></tr>
-                    <tr><td data-i18n="methods.outputPanel">面板层</td><td><code>evidence/data/authoritative/wetland_panel.xlsx</code></td><td data-i18n="methods.outputPanelPurpose">形成 1,166 条统一分析观测</td><td data-i18n="methods.outputPanelTrace">证据包记录文件 SHA-256</td></tr>
-                    <tr><td data-i18n="methods.outputAnalysis">分析层</td><td><code>evidence/data/historical · figure14 · model</code></td><td data-i18n="methods.outputAnalysisPurpose">承载趋势、质量诊断和模型解释结果</td><td data-i18n="methods.outputAnalysisTrace">保留派生文件路径与哈希</td></tr>
-                    <tr><td data-i18n="methods.outputProduct">产品层</td><td><code>evidence_bundle.json · manifest.json</code></td><td data-i18n="methods.outputProductPurpose">驱动总览、模型页面与区域下钻</td><td data-i18n="methods.outputProductTrace">bundle_id、版本、大小和 SHA-256 可校验</td></tr>
+                    <tr><td data-i18n="methods.outputCollection">采集层</td><td data-i18n="methods.outputCollectionArtifact">原始年度导出表</td><td data-i18n="methods.outputCollectionPurpose">保存逐年、逐空间单元的湿地与驱动变量</td><td data-i18n="methods.outputCollectionTrace">脚本保留数据集 ID、字段和处理尺度</td></tr>
+                    <tr><td data-i18n="methods.outputPanel">面板层</td><td data-i18n="methods.outputPanelArtifact">统一空间单元—年份面板</td><td data-i18n="methods.outputPanelPurpose">形成 1,166 条统一分析观测</td><td data-i18n="methods.outputPanelTrace">可核对输入版本与文件完整性</td></tr>
+                    <tr><td data-i18n="methods.outputAnalysis">分析层</td><td data-i18n="methods.outputAnalysisArtifact">历史趋势、综合证据与模型结果</td><td data-i18n="methods.outputAnalysisPurpose">承载趋势、质量诊断和模型解释结果</td><td data-i18n="methods.outputAnalysisTrace">每项结果保留派生来源</td></tr>
+                    <tr><td data-i18n="methods.outputProduct">产品层</td><td data-i18n="methods.outputProductArtifact">网页数据包与数据清单</td><td data-i18n="methods.outputProductPurpose">驱动总览、模型页面与区域下钻</td><td data-i18n="methods.outputProductTrace">发布版本与输入变化可追踪</td></tr>
                 </tbody>
             </table>
         </div>
+        <details class="methods-technical-trace"><summary data-i18n="methods.technicalTraceSummary">查看技术追溯信息</summary><p data-i18n="methods.technicalTraceCopy">权威面板、派生结果、网页数据包和 manifest 均保留项目内路径、文件指纹、数据契约版本与用途声明，供复现和发布校验使用。</p><dl><div><dt data-i18n="methods.technicalPanel">权威面板</dt><dd><code>evidence/data/authoritative/wetland_panel.xlsx</code></dd></div><div><dt data-i18n="methods.technicalDerived">派生证据</dt><dd><code>evidence/data/historical · screening_matrix · model</code></dd></div><div><dt data-i18n="methods.technicalProduct">发布数据</dt><dd><code>evidence_bundle.json · manifest.json</code></dd></div></dl></details>
     </section>
 
     <section class="methods-section" aria-labelledby="methods-boundary-title">

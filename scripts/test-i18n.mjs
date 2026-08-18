@@ -45,6 +45,11 @@ for (const key of new Set(markupKeys)) {
 }
 assert.match(indexHtml, /id="page-methods"/);
 assert.match(indexHtml, /showPage\('methods'\)/);
+const methodsOutput = indexHtml.slice(indexHtml.indexOf('methods-output-title'), indexHtml.indexOf('methods-boundary-title'));
+const [methodsReaderView, methodsTechnicalTrace] = methodsOutput.split('<details class="methods-technical-trace">');
+assert.doesNotMatch(methodsReaderView, /evidence\/data\/|bundle_id|SHA-256/, 'the methods table uses reader-facing artifact names');
+assert.match(methodsTechnicalTrace, /evidence\/data\/authoritative\/wetland_panel\.xlsx/);
+assert.match(methodsTechnicalTrace, /evidence_bundle\.json · manifest\.json/);
 
 assert.equal(app.i18n.normalizeLocale('ZH_hans_cn'), 'zh-CN');
 assert.equal(app.i18n.normalizeLocale('en-GB'), 'en');

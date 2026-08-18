@@ -437,6 +437,17 @@ tr:hover { background: var(--primary-light); }
 .drawer-section ul { margin: 8px 0 0 18px; }
 .drawer-source { margin-top: 24px; padding: 14px; background: #f3f7f9; }
 .drawer-source p { overflow-wrap: anywhere; }
+.provenance-summary { display: grid; gap: 8px; margin: 0; }
+.provenance-summary div { padding: 9px 10px; border: 1px solid #dce6eb; border-radius: 6px; background: #fff; }
+.provenance-summary dt { color: #557087; font-size: 11px; font-weight: 750; }
+.provenance-summary dd { margin: 3px 0 0; color: #17324d; font-size: 12px; line-height: 1.5; }
+.technical-trace { margin-top: 12px; border-top: 1px solid #d5dee4; }
+.technical-trace summary { padding: 11px 2px 3px; color: #176b87; cursor: pointer; font-size: 12px; font-weight: 750; }
+.technical-trace dl { display: grid; gap: 7px; margin: 10px 0 0; }
+.technical-trace dl div { min-width: 0; }
+.technical-trace dt { color: #6a7d89; font-size: 10px; font-weight: 700; }
+.technical-trace dd { margin: 2px 0 0; overflow-wrap: anywhere; color: #355266; font-size: 11px; }
+.technical-trace code { white-space: normal; }
 button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 3px solid #e9b44c; outline-offset: 2px; }
 
 .navbar .nav-tab:focus-visible, .navbar .nav-locale select:focus-visible { outline-color: #fff; }
@@ -507,6 +518,13 @@ button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-
 .methods-table th { background: #edf6f8; color: #17324d; font-size: 11px; }
 .methods-table td:first-child { color: #176b87; font-weight: 750; white-space: nowrap; }
 .methods-table code { overflow-wrap: anywhere; color: #355266; white-space: normal; }
+.methods-technical-trace { margin-top: 12px; padding: 12px 14px; border: 1px solid #d5dee4; border-radius: 8px; background: #f3f7f9; }
+.methods-technical-trace summary { color: #176b87; cursor: pointer; font-size: 12px; font-weight: 750; }
+.methods-technical-trace p { margin: 10px 0; color: #557087; font-size: 12px; }
+.methods-technical-trace dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; }
+.methods-technical-trace dl div { min-width: 0; padding: 8px; border-radius: 6px; background: #fff; }
+.methods-technical-trace dt { color: #557087; font-size: 10px; font-weight: 700; }
+.methods-technical-trace dd { margin: 3px 0 0; overflow-wrap: anywhere; color: #355266; font-size: 11px; }
 .boundary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .boundary-grid article { padding: 16px; border-left: 4px solid #d2a33a; background: #fff8e8; }
 .boundary-grid strong { color: #503f1d; font-size: 14px; }
@@ -552,6 +570,7 @@ button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-
     .figure14-formula dl { grid-template-columns: 1fr; }
     .methods-data-actions { align-items: start; flex-direction: column; }
     .methods-table { min-width: 680px; }
+    .methods-technical-trace dl { grid-template-columns: 1fr; }
 }
 
 /* Regional drilldown */

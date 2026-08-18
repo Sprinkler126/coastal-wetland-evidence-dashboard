@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = filename => fs.readFileSync(path.join(root, 'web', 'web', filename), 'utf8');
+const appSource = read('js/app.js');
 const chartsSource = read('js/charts.js');
 
 function createClassList(initial = []) {
@@ -80,6 +81,9 @@ const context = vm.createContext({
     formatEvidenceNumber: value => String(value),
     DATA: {
         evidenceBundle: {
+            contract_id: 'coastal-wetland-evidence-contract',
+            contract_version: '1.0.0',
+            bundle_id: 'bundle-test-id',
             cluster_summary: [
                 ...Array.from({ length: 7 }, (_, index) => ({ wetland: index === 0 ? 'Mangrove' : 'Saltmarsh', cluster: index === 0 ? 'BYS' : 'YRD', risk_matrix: { Category: 'High', Cell_Label: 'Multiple pressure' }, trend: { metrics: { direction: 'decrease' } } })),
                 ...Array.from({ length: 9 }, () => ({ risk_matrix: { Category: 'Medium' } })),
@@ -92,8 +96,29 @@ const context = vm.createContext({
     setTimeout,
     requestAnimationFrame: callback => callback(),
 });
-vm.runInContext(`${read('js/app.js')}\nrenderPageContent = pageName => __rendered.push(pageName); resizeActiveCharts = () => {}; getEvidenceSummary = (wetland, cluster) => DATA.evidenceBundle.cluster_summary.find(item => item.wetland === wetland && item.cluster === cluster) || {}; this.__showPage = showPage; this.__renderOverviewMatrix = renderOverviewMatrix; this.__renderOverviewQuality = renderOverviewQuality; this.__screeningCellLabel = screeningCellLabel; this.__evidenceSupportGradeDisplay = evidenceSupportGradeDisplay;`, context);
+vm.runInContext(`${appSource}\nrenderPageContent = pageName => __rendered.push(pageName); resizeActiveCharts = () => {}; getEvidenceSummary = (wetland, cluster) => DATA.evidenceBundle.cluster_summary.find(item => item.wetland === wetland && item.cluster === cluster) || {}; this.__showPage = showPage; this.__renderOverviewMatrix = renderOverviewMatrix; this.__renderOverviewQuality = renderOverviewQuality; this.__renderEvidenceProvenance = renderEvidenceProvenance; this.__screeningCellLabel = screeningCellLabel; this.__evidenceSupportGradeDisplay = evidenceSupportGradeDisplay;`, context);
 context.__rendered = rendered;
+
+const provenanceHtml = context.__renderEvidenceProvenance({
+    scale: 'spatial_unit',
+    method: 'deterministic endpoint change and centered OLS slope',
+    period: { label: '2001–2022' },
+    source: { path: 'evidence/data/historical/unit_trends.csv', sha256: 'abc123' },
+});
+const [provenanceSummary, provenanceTechnical] = provenanceHtml.split('<details');
+assert.match(provenanceSummary, /Data basis and interpretation/);
+assert.match(provenanceSummary, /2001–2022 authoritative panel/);
+assert.match(provenanceSummary, /Endpoint change \+ centered OLS annual trend/);
+assert.doesNotMatch(provenanceSummary, /unit_trends\.csv|abc123|coastal-wetland-evidence-contract|bundle-test-id/, 'technical identifiers stay out of the reader-facing summary');
+assert.match(provenanceTechnical, /unit_trends\.csv/);
+assert.match(provenanceTechnical, /abc123/);
+assert.match(provenanceTechnical, /coastal-wetland-evidence-contract/);
+assert.match(provenanceTechnical, /bundle-test-id/);
+const overviewDrawerSource = appSource.slice(appSource.indexOf('function renderEvidenceDrawer'), appSource.indexOf('function openEvidenceDrawer'));
+const unitDrawerSource = appSource.slice(appSource.indexOf('function renderUnitEvidenceCard'), appSource.indexOf('function openUnitEvidenceCard'));
+assert.match(overviewDrawerSource, /renderEvidenceProvenance\(trend\)/, 'the overview drawer uses the shared progressive-disclosure trace');
+assert.match(unitDrawerSource, /renderEvidenceProvenance\(evidence\)/, 'the unit drawer uses the shared progressive-disclosure trace');
+assert.doesNotMatch(`${overviewDrawerSource}${unitDrawerSource}`, /source\?\.path|source\?\.sha256|unit\.contract/, 'drawers do not place raw technical identifiers directly in their main content');
 
 context.__renderOverviewMatrix();
 assert.match(matrixContainer.innerHTML, /class="screening-matrix-table"/, 'overview renders the synthesis as a table');
