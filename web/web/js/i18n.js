@@ -269,9 +269,8 @@
         'answerStatus.needs_review': '需要审核',
         'answerStatus.out_of_scope': '超出范围',
 
-        'overview.eyebrow': '湿地守望 · 证据导航',
-        'overview.title': '沿海湿地历史证据总览',
-        'overview.copy': '用确定性历史指标定位值得进一步核查的城市群与湿地组合。这里展示观测期证据，不输出未来风险概率。',
+        'overview.title': '沿海湿地历史变化与模型解释',
+        'overview.copy': '本项目整理 2001–2022 年中国沿海 53 个空间单元的湿地面积及相关驱动变量，并结合历史趋势、双向固定效应模型、机器学习解释和区域异质性分析，提供可复核的探索性结果。页面旨在支持结果核查与方法交流；所示关联和模型响应不构成因果识别、生态成效评价或未来风险预测。',
         'overview.recommendation': '查看推荐理由',
         'overview.period': '历史观测期',
         'overview.observations': '空间单元—年份观测',
@@ -1013,9 +1012,8 @@
         'answerStatus.needs_review': 'Needs review',
         'answerStatus.out_of_scope': 'Out of scope',
 
-        'overview.eyebrow': 'Wetland Watch · Evidence Navigation',
-        'overview.title': 'Overview of Historical Evidence for Coastal Wetlands',
-        'overview.copy': 'Use deterministic historical indicators to identify city-cluster and wetland combinations worth further review. This view presents observed-period evidence, not future-risk probabilities.',
+        'overview.title': 'Historical Change and Model Interpretation of Coastal Wetlands',
+        'overview.copy': 'This project organizes wetland-area observations and related drivers for 53 coastal spatial units in China from 2001 to 2022. Historical trends, two-way fixed-effects models, machine-learning interpretation, and regional heterogeneity analyses are presented as exploratory, auditable results. The site supports result checking and methodological discussion; the reported associations and model responses do not constitute causal identification, ecological-effectiveness evaluation, or future-risk prediction.',
         'overview.recommendation': 'View rationale',
         'overview.period': 'Historical observation period',
         'overview.observations': 'Spatial unit–year observations',

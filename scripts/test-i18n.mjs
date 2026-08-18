@@ -45,6 +45,9 @@ for (const key of new Set(markupKeys)) {
 }
 assert.match(indexHtml, /id="page-methods"/);
 assert.match(indexHtml, /showPage\('methods'\)/);
+const overviewHero = indexHtml.slice(indexHtml.indexOf('<section class="overview-hero">'), indexHtml.indexOf('<div class="stat-cards overview-stats">'));
+assert.doesNotMatch(overviewHero, /湿地守望|openRecommendationDrawer|overview\.recommendation/, 'the overview hero stays academic and contains no recommendation action');
+assert.match(overviewHero, /双向固定效应模型/);
 const methodsOutput = indexHtml.slice(indexHtml.indexOf('methods-output-title'), indexHtml.indexOf('methods-boundary-title'));
 const [methodsReaderView, methodsTechnicalTrace] = methodsOutput.split('<details class="methods-technical-trace">');
 assert.doesNotMatch(methodsReaderView, /evidence\/data\/|bundle_id|SHA-256/, 'the methods table uses reader-facing artifact names');
@@ -77,6 +80,9 @@ assert.equal(app.i18n.label('wetland', 'UnmappedWetland'), 'UnmappedWetland', 'u
 
 assert.equal(app.i18n.t('common.global'), 'All samples', 'global means all samples, not the world');
 assert.equal(app.i18n.t('nav.methods'), 'Data & Methods');
+assert.equal(app.i18n.t('overview.title'), 'Historical Change and Model Interpretation of Coastal Wetlands');
+assert.match(app.i18n.t('overview.copy'), /exploratory, auditable results/);
+assert.match(app.i18n.t('overview.copy'), /do not constitute causal identification/);
 assert.equal(app.i18n.t('matrixEvidence.whyReviewTitle'), 'Why this cell needs review');
 assert.equal(app.i18n.t('matrixEvidence.interpretationTitle'), 'How to interpret these results');
 assert.match(app.i18n.t('matrixEvidence.shap.found', { features: 'Cropland' }), /Importance does not imply causality/);
@@ -95,6 +101,9 @@ assert.equal(app.i18n.getLocale(), 'zh-CN');
 assert.equal(app.storage.get(app.i18n.storageKey), 'zh-CN');
 assert.equal(app.i18n.label('wetland', 'Mangrove'), '红树林');
 assert.equal(app.i18n.t('common.global'), '全样本');
+assert.equal(app.i18n.t('overview.title'), '沿海湿地历史变化与模型解释');
+assert.match(app.i18n.t('overview.copy'), /提供可复核的探索性结果/);
+assert.match(app.i18n.t('overview.copy'), /不构成因果识别、生态成效评价或未来风险预测/);
 assert.equal(app.i18n.t('matrixEvidence.whyReviewTitle'), '为什么这个单元值得复核');
 assert.equal(app.i18n.t('matrixEvidence.interpretationTitle'), '如何理解这些结果');
 assert.match(app.i18n.t('matrixEvidence.shap.found', { features: '耕地面积' }), /重要性不代表因果关系/);

@@ -330,11 +330,10 @@ tr:hover { background: var(--primary-light); }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* Product overview */
-.overview-hero { display: flex; justify-content: space-between; gap: 24px; align-items: end; padding: 28px 30px; margin-bottom: 16px; background: #17324d; color: #fff; border-radius: var(--radius); }
+.overview-hero { display: block; padding: 28px 30px; margin-bottom: 16px; background: #17324d; color: #fff; border-radius: var(--radius); }
 .overview-hero h2 { margin: 4px 0 8px; font-size: clamp(24px, 3vw, 38px); line-height: 1.15; }
-.hero-copy { max-width: 680px; color: #d7e5ef; }
+.hero-copy { max-width: 1120px; color: #d7e5ef; line-height: 1.72; }
 .eyebrow { margin: 0; color: #557087; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-.overview-hero .eyebrow { color: #a9c6d8; }
 .primary-action, .secondary-action, .text-action { border: 0; cursor: pointer; font: inherit; }
 .primary-action { flex: 0 0 auto; padding: 10px 16px; border-radius: 5px; background: #e9b44c; color: #17324d; font-weight: 700; }
 .secondary-action { padding: 8px 12px; border: 1px solid #c8d6df; border-radius: 5px; background: #fff; color: #17324d; font-weight: 600; }
@@ -484,7 +483,6 @@ button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-
     .navbar h1 { margin-right: 16px; }
     .nav-tabs { order: 3; flex-basis: 100%; height: auto; padding-bottom: 2px; }
     .nav-locale { margin-left: auto; }
-    .overview-hero { align-items: start; flex-direction: column; }
     .trend-grid { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
     .recommendation-strip { align-items: start; flex-direction: column; gap: 8px; }
     .quality-grid { grid-template-columns: 1fr; }
