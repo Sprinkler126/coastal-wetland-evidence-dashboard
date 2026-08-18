@@ -18,8 +18,6 @@
         <button class="nav-tab" type="button" onclick="showPage('partial')" data-i18n="nav.partial">部分效应</button>
         <button class="nav-tab" type="button" onclick="showPage('heterogeneity')" data-i18n="nav.heterogeneity">城市异质性</button>
         <button class="nav-tab" type="button" onclick="showPage('region')" data-i18n="nav.region">区域下钻</button>
-        <button class="nav-tab" type="button" onclick="showPage('ai')" data-i18n="nav.ai">AI 解释</button>
-        <button class="nav-tab" type="button" onclick="showPage('actions')" data-i18n="nav.actions">行动与简报</button>
     </div>
     <div class="nav-locale">
         <label class="visually-hidden" for="locale-select" data-i18n="locale.label">选择语言</label>
@@ -44,11 +42,11 @@
     </section>
 
     <div class="stat-cards overview-stats">
-        <div class="stat-card"><div class="value">2001–2022</div><div class="label" data-i18n="overview.period">历史观测期</div></div>
-        <div class="stat-card"><div class="value">1,166</div><div class="label" data-i18n="overview.observations">空间单元—年份观测</div></div>
-        <div class="stat-card"><div class="value">53</div><div class="label" data-i18n="overview.spatialUnits">沿海空间单元</div></div>
-        <div class="stat-card"><div class="value">5</div><div class="label" data-i18n="overview.clusters">城市群</div></div>
-        <div class="stat-card"><div class="value">4</div><div class="label" data-i18n="overview.wetlands">重点湿地类型</div></div>
+        <div class="stat-card"><div class="value" id="overview-period-value">2001–2022</div><div class="label" data-i18n="overview.period">历史观测期</div></div>
+        <div class="stat-card"><div class="value" id="overview-observations-value">1,166</div><div class="label" data-i18n="overview.observations">空间单元—年份观测</div></div>
+        <div class="stat-card"><div class="value" id="overview-spatial-units-value">53</div><div class="label" data-i18n="overview.spatialUnits">沿海空间单元</div></div>
+        <div class="stat-card"><div class="value" id="overview-clusters-value">5</div><div class="label" data-i18n="overview.clusters">城市群</div></div>
+        <div class="stat-card"><div class="value" id="overview-wetlands-value">4</div><div class="label" data-i18n="overview.wetlands">重点湿地类型</div></div>
     </div>
 
     <section class="notice notice-info"><strong data-i18n="overview.readingRule">读图口径：</strong><span data-i18n="overview.boundary">Figure 14 矩阵展示综合筛查/复核类别，历史变化导航展示观测期事实；这些类别不是未来风险概率。</span></section>
@@ -130,64 +128,6 @@
     <div id="unit-drawer" class="drawer-overlay is-hidden" role="presentation" onclick="handleUnitDrawerOverlay(event)"><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="unit-drawer-title"><button class="drawer-close" type="button" aria-label="关闭" data-i18n-aria-label="common.close" onclick="closeUnitEvidenceCard()" title="关闭" data-i18n-title="common.close">×</button><div id="unit-drawer-content"></div></aside></div>
 </div>
 
-<div id="page-ai" class="page">
-    <section class="ai-hero">
-        <div>
-            <p class="eyebrow" data-i18n="ai.eyebrow">Day 7 · AI 问数与解释</p>
-            <h2 data-i18n="ai.title">基于结构化证据对象生成解释</h2>
-            <p class="hero-copy" data-i18n="ai.copy">静态 MVP 使用受控模板适配器，不自行计算数字，不输出未来风险概率；每条解释保留引用和人工审核提示。</p>
-        </div>
-        <button class="secondary-action" type="button" onclick="showPage('overview')" data-i18n="region.backOverview">返回五群总览</button>
-    </section>
-    <section class="notice notice-info"><strong data-i18n="ai.guardrail">AI 护栏：</strong><span data-i18n="ai.guardrailCopy">所有数字来自 Day 7 输入 JSON；关联和模型归因不表示因果；解释通过规则检查后仍需人工审核。</span></section>
-    <section class="ai-workbench">
-        <div class="ai-controls card">
-            <div class="control-group"><label for="ai-audience" data-i18n="ai.audience">受众模式</label><select id="ai-audience" onchange="submitAiQuestion()" data-i18n-aria-label="ai.audience"><option value="public" data-i18n="audience.public">公众版</option><option value="ngo_internal" data-i18n="audience.ngo_internal">NGO 内部版</option><option value="funder" data-i18n="audience.funder">资助方版</option></select></div>
-            <div class="control-group"><label for="ai-cluster" data-i18n="region.cluster">城市群</label><select id="ai-cluster" onchange="aiState.cluster=this.value; submitAiQuestion()" data-i18n-aria-label="region.cluster"></select></div>
-            <div class="control-group"><label for="ai-wetland" data-i18n="region.wetland">湿地</label><select id="ai-wetland" onchange="aiState.wetland=this.value; submitAiQuestion()" data-i18n-aria-label="region.wetland"></select></div>
-            <div class="control-group ai-question-box"><label for="ai-question" data-i18n="ai.question">问题</label><textarea id="ai-question" rows="4" placeholder="例如：环渤海潮滩历史变化说明了什么？" data-i18n-placeholder="ai.questionPlaceholder"></textarea></div>
-            <button class="primary-action" type="button" onclick="submitAiQuestion()" data-i18n="ai.generate">生成结构化解释</button>
-            <div class="ai-guardrail-copy"><strong data-i18n="ai.prePublish">发布前检查</strong><ul><li data-i18n="ai.noNewNumbers">不自行计算数字</li><li data-i18n="ai.reviewRequired">人工审核</li><li data-i18n="ai.noFutureRisk">不输出未来风险概率</li><li data-i18n="ai.citeEvidence">引用 Day 3 evidence/source</li></ul></div>
-        </div>
-        <div class="ai-main">
-            <div class="section-heading"><div><p class="eyebrow" data-i18n="ai.suggested">推荐问题</p><h3 data-i18n="ai.samplesTitle">20 个验收问题样例</h3></div></div>
-            <div id="ai-suggestions" class="ai-suggestions"></div>
-            <div id="ai-output" aria-live="polite"></div>
-        </div>
-    </section>
-</div>
-
-<div id="page-actions" class="page">
-    <section class="actions-hero">
-        <div>
-            <p class="eyebrow" data-i18n="actions.eyebrow">Day 8 · 行动任务和简报</p>
-            <h2 data-i18n="actions.title">从证据卡生成任务草稿与 Markdown 简报</h2>
-            <p class="hero-copy" data-i18n="actions.copy">任务和简报均为静态 MVP 草稿，不持久化、不自动指定真实责任主体；导出时保留 evidence id、来源 SHA 和人工审核状态。</p>
-        </div>
-        <button class="secondary-action" type="button" onclick="showPage('overview')" data-i18n="region.backOverview">返回五群总览</button>
-    </section>
-    <section class="notice notice-info"><strong data-i18n="actions.guardrail">Day 8 护栏：</strong><span data-i18n="actions.guardrailCopy">行动任务不是审批结果；简报不输出未来风险概率、不写因果结论、不把面积增长等同修复成功。</span></section>
-    <section class="actions-workbench">
-        <div class="actions-left">
-            <article class="card action-source-card"><div class="card-header" data-i18n="actions.sourceEvidence">来源证据</div><div class="card-body" id="action-source-context"></div></article>
-            <article class="card action-task-card"><div class="card-header" data-i18n="actions.taskDraft">任务草稿</div><div class="card-body action-task-form" id="action-task-form"></div></article>
-        </div>
-        <div class="actions-main">
-            <div class="section-heading"><div><p class="eyebrow" data-i18n="actions.taskList">任务列表</p><h3 data-i18n="actions.memoryDraft">内存草稿（刷新页面会丢失）</h3></div></div>
-            <div class="action-task-list" id="action-task-list"></div>
-            <article class="card brief-panel">
-                <div class="card-header" data-i18n="actions.briefExport">简报与 Markdown 导出</div>
-                <div class="card-body">
-                    <label class="brief-audience-control"><span data-i18n="actions.audienceSelect">受众选择</span> <select id="brief-audience" onchange="setBriefAudience(this.value)" data-i18n-aria-label="actions.audienceSelect"><option value="public" data-i18n="audience.public">公众版</option><option value="ngo_internal" data-i18n="audience.ngo_internal">NGO 内部版</option><option value="funder" data-i18n="audience.funder">资助方版</option></select></label>
-                    <div id="brief-preview" class="brief-preview"></div>
-                    <h4 data-i18n="actions.markdownPreview">Markdown 预览</h4>
-                    <pre id="markdown-export-preview" class="markdown-preview"></pre>
-                </div>
-            </article>
-        </div>
-    </section>
-</div>
-
 <div id="page-importance" class="page">
     <div class="controls">
         <div class="control-group"><label for="imp-wetland" data-i18n="importance.wetlandType">湿地类型</label><select id="imp-wetland" onchange="updateImportance()" data-i18n-aria-label="importance.wetlandType"></select></div>
@@ -232,8 +172,6 @@
 <script src="js/i18n.js"></script>
 <script src="js/data.js"></script>
 <script src="js/charts.js"></script>
-<script src="js/ai_explain.js"></script>
-<script src="js/actions_briefs.js"></script>
 <script src="js/app.js"></script>
 
 </body>

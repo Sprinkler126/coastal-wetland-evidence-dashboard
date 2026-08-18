@@ -3,11 +3,34 @@
  */
 
 const CHART_THEME = {
-    textStyle: { fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
-    grid: { left: 60, right: 30, top: 40, bottom: 50, containLabel: true },
+    textStyle: {
+        color: '#355266',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif',
+        fontSize: 12,
+    },
+    grid: { left: 24, right: 24, top: 24, bottom: 28, containLabel: true },
 };
 
 const CHART_RESIZE_IDS = new Set();
+const CHART_RESIZE_OBSERVER = typeof ResizeObserver === 'function'
+    ? new ResizeObserver(entries => {
+        entries.forEach(entry => {
+            const chart = window.echarts?.getInstanceByDom(entry.target);
+            try { chart?.resize(); } catch (error) { console.warn('chart_resize_skipped', entry.target.id, error); }
+        });
+    })
+    : null;
+
+// Okabe-Ito-inspired palettes keep series distinguishable for common forms of
+// colour-vision deficiency. Meanings remain stable across every chart.
+const WETLAND_CHART_COLORS = ['#0072B2', '#E69F00', '#009E73', '#CC79A7'];
+const CLUSTER_CHART_COLORS = { BBG: '#0072B2', BYS: '#E69F00', HX: '#009E73', PRD: '#CC79A7', YRD: '#D55E00' };
+const GROUP_CHART_COLORS = { Climate: '#0072B2', Urbanization: '#E69F00', Economy: '#009E73', Population: '#CC79A7', Agriculture: '#D55E00' };
+const SEQUENTIAL_COLORS = ['#f2f8f7', '#d8ece8', '#a9d6ce', '#66b3aa', '#2b817c', '#124f4c'];
+const DIVERGING_COLORS = ['#2b6cb0', '#9cc5df', '#f7f7f4', '#edb27c', '#c6532d'];
+
+function clusterChartColor(cluster) { return CLUSTER_CHART_COLORS[cluster] || '#6b7f8c'; }
+function groupChartColor(group) { return GROUP_CHART_COLORS[group] || '#6b7f8c'; }
 
 /*
  * Keep chart copy in one place as a resilient fallback for the two supported
@@ -30,6 +53,8 @@ const CHART_COPY = {
     'visualMap.lowR2': { en: 'Low R²', zh: '较低 R²' },
     'visualMap.high': { en: 'High', zh: '高' },
     'visualMap.low': { en: 'Low', zh: '低' },
+    'visualMap.positive': { en: 'Positive', zh: '正向' },
+    'visualMap.negative': { en: 'Negative', zh: '负向' },
     'axes.groupMeanAbsShap': { en: 'Group mean |SHAP|', zh: '特征组平均 |SHAP|' },
     'axes.top1ShapValue': { en: 'Top-1 SHAP value', zh: '首位驱动因素 SHAP 值' },
     'axes.meanAbsShap': { en: 'mean |SHAP|', zh: '平均 |SHAP|' },
@@ -152,11 +177,16 @@ function renderChartUnavailable(dom, message = chartText('status.libraryUnavaila
 function registerChartResize(domId) {
     if (!domId || CHART_RESIZE_IDS.has(domId)) return;
     CHART_RESIZE_IDS.add(domId);
+    const dom = document.getElementById(domId);
+    if (dom && CHART_RESIZE_OBSERVER) {
+        CHART_RESIZE_OBSERVER.observe(dom);
+        return;
+    }
     window.addEventListener('resize', () => {
-        const dom = document.getElementById(domId);
-        const chart = dom && window.echarts?.getInstanceByDom(dom);
+        const currentDom = document.getElementById(domId);
+        const chart = currentDom && window.echarts?.getInstanceByDom(currentDom);
         try { chart?.resize(); } catch (error) { console.warn('chart_resize_skipped', domId, error); }
-    });
+    }, { passive: true });
 }
 
 function initChart(domId) {
@@ -183,7 +213,53 @@ function initChart(domId) {
 }
 
 function setLocalizedChartOption(chart, option) {
-    chart.setOption(option, { notMerge: true, lazyUpdate: false });
+    const styleAxis = axis => {
+        if (!axis) return axis;
+        if (Array.isArray(axis)) return axis.map(styleAxis);
+        const { axisLine, axisTick, axisLabel, nameTextStyle, splitLine, ...axisRest } = axis;
+        return {
+            ...axisRest,
+            axisLine: { lineStyle: { color: '#b8c8d0' }, ...axisLine },
+            axisTick: { show: false, ...axisTick },
+            axisLabel: { color: '#557087', fontSize: 11, hideOverlap: true, ...axisLabel },
+            nameTextStyle: { color: '#355266', fontSize: 12, fontWeight: 600, ...nameTextStyle },
+            splitLine: {
+                show: axisRest.type !== 'category',
+                lineStyle: { color: '#e4ebee', type: 'dashed' },
+                ...splitLine,
+            },
+        };
+    };
+    const styledOption = {
+        animationDuration: 420,
+        animationEasing: 'cubicOut',
+        ...option,
+        textStyle: { ...CHART_THEME.textStyle, ...option.textStyle },
+        ...(option.grid ? { grid: { ...CHART_THEME.grid, ...option.grid, containLabel: true } } : {}),
+        ...(option.tooltip ? {
+            tooltip: {
+                confine: true,
+                backgroundColor: 'rgba(19, 40, 52, .94)',
+                borderWidth: 0,
+                padding: [9, 12],
+                textStyle: { color: '#fff', fontSize: 12, lineHeight: 19 },
+                extraCssText: 'border-radius: 8px; box-shadow: 0 8px 24px rgba(18, 50, 61, .18);',
+                ...option.tooltip,
+            },
+        } : {}),
+        ...(option.legend ? {
+            legend: {
+                ...option.legend,
+                itemWidth: 14,
+                itemHeight: 8,
+                itemGap: 16,
+                textStyle: { color: '#557087', fontSize: 11, ...option.legend.textStyle },
+            },
+        } : {}),
+        xAxis: styleAxis(option.xAxis),
+        yAxis: styleAxis(option.yAxis),
+    };
+    chart.setOption(styledOption, { notMerge: true, lazyUpdate: false });
     registerChartResize(chart.__domId);
 }
 
@@ -197,17 +273,54 @@ function numericAxis(name, digits, extra = {}) {
     };
 }
 
-function heatVisualMap(min, max, digits, colors, rSquared = false) {
+function heatVisualMap(min, max, digits, colors, rSquared = false, endpointKeys = null) {
+    const highKey = endpointKeys?.high || (rSquared ? 'visualMap.highR2' : 'visualMap.high');
+    const lowKey = endpointKeys?.low || (rSquared ? 'visualMap.lowR2' : 'visualMap.low');
     return {
         min,
-        ...(max === undefined ? {} : { max }),
+        max: max > min ? max : min + 1,
         calculable: true,
         orient: 'vertical',
-        right: 10,
+        right: 4,
         top: 'center',
+        itemWidth: 10,
+        itemHeight: 112,
+        dimension: 2,
         inRange: { color: colors },
-        text: [chartText(rSquared ? 'visualMap.highR2' : 'visualMap.high'), chartText(rSquared ? 'visualMap.lowR2' : 'visualMap.low')],
+        text: [chartText(highKey), chartText(lowKey)],
+        textGap: 8,
+        textStyle: { color: '#557087', fontSize: 10 },
         formatter: value => formatChartNumber(value, digits),
+    };
+}
+
+function chartMax(values, fallback = 1) {
+    const numericValues = values.map(Number).filter(Number.isFinite);
+    return numericValues.length ? Math.max(...numericValues, Number.EPSILON) : fallback;
+}
+
+function heatmapSeries(data, digits, max, valueIndex = 2, options = {}) {
+    const { colorValueIndex = valueIndex, min = 0, absolute = false } = options;
+    const range = Math.max(max - min, Number.EPSILON);
+    const styledData = data.map(value => {
+        const colorValue = absolute ? Math.abs(Number(value[colorValueIndex])) : Number(value[colorValueIndex]);
+        const contrastRatio = Math.max(0, colorValue - min) / range;
+        return {
+            value,
+            label: { color: contrastRatio > 0.58 ? '#fff' : '#17324d' },
+        };
+    });
+    return {
+        type: 'heatmap',
+        data: styledData,
+        label: {
+            show: true,
+            fontSize: 10,
+            fontWeight: 600,
+            formatter: params => formatChartNumber(params.value[valueIndex], digits),
+        },
+        itemStyle: { borderColor: '#fff', borderWidth: 2, borderRadius: 2 },
+        emphasis: { itemStyle: { borderColor: '#17324d', borderWidth: 2, shadowBlur: 8, shadowColor: 'rgba(23, 50, 77, .18)' } },
     };
 }
 
@@ -261,16 +374,8 @@ function renderCvHeatmap() {
         grid: { left: 80, right: 80, top: 20, bottom: 40 },
         xAxis: { type: 'category', data: clusterLabels, axisLabel: { fontSize: 11 } },
         yAxis: { type: 'category', data: wetlandLabels, axisLabel: { fontSize: 11 } },
-        visualMap: heatVisualMap(0.8, 1.0, 2, ['#fff7ec', '#fee8c8', '#fdd49e', '#fdbb84', '#fc8d59', '#e34a33', '#b30000'], true),
-        series: [{
-            type: 'heatmap', data,
-            label: {
-                show: true, fontSize: 11,
-                formatter: p => p.value[2] !== undefined ? formatChartNumber(p.value[2], 3) : '',
-                color: '#333', textBorderColor: '#fff', textBorderWidth: 2,
-            },
-            emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0,0,0,0.5)' } },
-        }],
+        visualMap: heatVisualMap(0.8, 1.0, 2, SEQUENTIAL_COLORS, true),
+        series: [heatmapSeries(data, 3, 1, 2, { min: 0.8 })],
     });
 }
 
@@ -300,7 +405,7 @@ function renderGroupGlobal() {
             name: wetlandLabel(wetland),
             type: 'bar',
             data: groups.map(group => roundChartValue(groupValues[group], 4)),
-            itemStyle: { borderWidth: 1, borderColor: '#333' },
+            itemStyle: { borderRadius: [4, 4, 0, 0] },
         });
     });
 
@@ -315,7 +420,7 @@ function renderGroupGlobal() {
         xAxis: { type: 'category', data: groupLabels },
         yAxis: numericAxis(chartText('axes.groupMeanAbsShap'), 4),
         series,
-        color: ['#e41a1c', '#377eb8', '#4daf4a', '#984ea3'],
+        color: WETLAND_CHART_COLORS,
     });
 }
 
@@ -335,7 +440,7 @@ function renderTop3() {
             if (top1) {
                 seriesData.push({
                     value: top1.SHAP_Value,
-                    itemStyle: { color: CLUSTER_COLORS[cluster] },
+                    itemStyle: { color: clusterChartColor(cluster) },
                     featureCode: top1.Feature_Code || top1.Feature,
                 });
             } else {
@@ -360,7 +465,7 @@ function renderTop3() {
         grid: { left: 100, right: 30, top: 10, bottom: 30 },
         xAxis: numericAxis(chartText('axes.top1ShapValue'), 4),
         yAxis: { type: 'category', data: categories, axisLabel: { fontSize: 10 } },
-        series: [{ type: 'bar', data: seriesData, barWidth: '60%' }],
+        series: [{ type: 'bar', data: seriesData, barWidth: '60%', barMaxWidth: 24, itemStyle: { borderRadius: [0, 4, 4, 0] } }],
     });
 }
 
@@ -401,8 +506,8 @@ function renderImportanceHeatmap(wetland, mode) {
             grid: { left: 100, right: 80, top: 10, bottom: 40 },
             xAxis: { type: 'category', data: CLUSTERS.map(clusterLabel) },
             yAxis: { type: 'category', data: features },
-            visualMap: heatVisualMap(0, 1, 2, ['#fff', '#fee0d2', '#fc9272', '#de2d26', '#a50f15']),
-            series: [{ type: 'heatmap', data: normData, label: { show: true, fontSize: 9, formatter: p => p.value[2] !== undefined ? formatChartNumber(p.value[2], 2) : '', color: '#333', textBorderColor: '#fff', textBorderWidth: 2 } }],
+            visualMap: heatVisualMap(0, 1, 2, SEQUENTIAL_COLORS),
+            series: [heatmapSeries(normData, 2, 1)],
         };
     } else if (mode === 'group') {
         const groups = Object.keys(FEATURE_GROUPS);
@@ -430,8 +535,8 @@ function renderImportanceHeatmap(wetland, mode) {
             grid: { left: 80, right: 80, top: 10, bottom: 40 },
             xAxis: { type: 'category', data: CLUSTERS.map(clusterLabel) },
             yAxis: { type: 'category', data: groupLabels },
-            visualMap: heatVisualMap(0, undefined, 4, ['#fff', '#fee0d2', '#fc9272', '#de2d26', '#a50f15']),
-            series: [{ type: 'heatmap', data: groupMatrix, label: { show: true, fontSize: 11, formatter: p => p.value[2] !== undefined ? formatChartNumber(p.value[2], 4) : '', color: '#333', textBorderColor: '#fff', textBorderWidth: 2 } }],
+            visualMap: heatVisualMap(0, chartMax(groupMatrix.map(d => d[2])), 4, SEQUENTIAL_COLORS),
+            series: [heatmapSeries(groupMatrix, 4, chartMax(groupMatrix.map(d => d[2])))],
         };
     } else {
         option = {
@@ -442,8 +547,8 @@ function renderImportanceHeatmap(wetland, mode) {
             grid: { left: 100, right: 80, top: 10, bottom: 40 },
             xAxis: { type: 'category', data: CLUSTERS.map(clusterLabel) },
             yAxis: { type: 'category', data: features },
-            visualMap: heatVisualMap(0, undefined, 4, ['#fff', '#fee0d2', '#fc9272', '#de2d26', '#a50f15']),
-            series: [{ type: 'heatmap', data: matrix, label: { show: true, fontSize: 9, formatter: p => p.value[2] !== undefined ? formatChartNumber(p.value[2], 4) : '', color: '#333', textBorderColor: '#fff', textBorderWidth: 2 } }],
+            visualMap: heatVisualMap(0, chartMax(matrix.map(d => d[2])), 4, SEQUENTIAL_COLORS),
+            series: [heatmapSeries(matrix, 4, chartMax(matrix.map(d => d[2])))],
         };
     }
 
@@ -470,9 +575,10 @@ function renderImportanceBar(wetland) {
             type: 'bar',
             data: sorted.map(d => ({
                 value: d.mean_abs_SHAP,
-                itemStyle: { color: GROUP_COLORS[d.Feature_Group] || '#999' },
+                itemStyle: { color: groupChartColor(d.Feature_Group), borderRadius: [0, 4, 4, 0] },
             })),
             barWidth: '60%',
+            barMaxWidth: 26,
         }],
     });
 }
@@ -500,7 +606,8 @@ function renderDependence(wetland, feature, cluster, mode) {
                 type: 'scatter',
                 data: scatterData,
                 symbolSize: 6,
-                itemStyle: { opacity: 0.4, color: scope === 'global' ? '#333' : CLUSTER_COLORS[scope] },
+                itemStyle: { opacity: 0.55, color: scope === 'global' ? '#263d4a' : clusterChartColor(scope) },
+                emphasis: { focus: 'series', itemStyle: { opacity: 0.9 } },
             });
         });
 
@@ -538,8 +645,9 @@ function renderDependence(wetland, feature, cluster, mode) {
             xAxis: numericAxis(featureLabel(feature), 2, { nameLocation: 'center', nameGap: 30 }),
             yAxis: numericAxis(chartText('axes.shapValue'), 4),
             series: [{
-                type: 'scatter', data: scatterData, symbolSize: 8,
-                itemStyle: { color: '#1a73e8', opacity: 0.5 },
+                type: 'scatter', data: scatterData, symbolSize: 7,
+                itemStyle: { color: '#007C83', opacity: 0.58 },
+                emphasis: { itemStyle: { opacity: 0.95 } },
             }],
         });
     }
@@ -567,8 +675,10 @@ function renderPartialEffect(wetland, feature, cluster, mode) {
                 type: 'line',
                 data: curve.values.map((value, index) => [value, curve.pred_orig[index]]),
                 smooth: true,
+                showSymbol: false,
                 lineStyle: { width: scope === 'global' ? 3 : 2, type: scope === 'global' ? 'dashed' : 'solid' },
-                itemStyle: { color: scope === 'global' ? '#333' : CLUSTER_COLORS[scope] },
+                itemStyle: { color: scope === 'global' ? '#263d4a' : clusterChartColor(scope) },
+                emphasis: { focus: 'series' },
             });
         });
 
@@ -612,8 +722,8 @@ function renderPartialEffect(wetland, feature, cluster, mode) {
             yAxis: numericAxis(chartText('axes.predictedArea'), 2),
             series: [{
                 type: 'line', data: curve.values.map((value, index) => [value, curve.pred_orig[index]]),
-                smooth: true, lineStyle: { width: 3, color: '#1a73e8' },
-                areaStyle: { color: 'rgba(26,115,232,0.1)' },
+                smooth: true, showSymbol: false, lineStyle: { width: 3, color: '#007C83' },
+                areaStyle: { color: 'rgba(0,124,131,0.12)' },
             }],
         });
     }
@@ -629,20 +739,26 @@ function renderElasticityHeatmap(wetland) {
     CLUSTERS.forEach((cluster, ci) => {
         FEATURES.forEach((feature, fi) => {
             const found = summary.find(d => d.Wetland_Code === wetland && d.Cluster_Code === cluster && d.Feature_Code === feature);
-            data.push([ci, fi, roundChartValue(found ? found.Elasticity : 0, 4)]);
+            const rawValue = roundChartValue(found ? found.Elasticity : 0, 4);
+            data.push([ci, fi, Math.log1p(Math.max(0, rawValue)), rawValue]);
         });
     });
+
+    const maxLogValue = chartMax(data.map(d => d[2]));
 
     setLocalizedChartOption(chart, {
         aria: chartAria('elasticity'),
         tooltip: {
-            formatter: p => `${safeChartHtml(clusterLabel(CLUSTERS[p.value[0]]))} / ${safeChartHtml(featureLabel(FEATURES[p.value[1]]))}<br>${tooltipLine(chartText('metrics.elasticity'), formatChartNumber(p.value[2], 4))}`,
+            formatter: p => `${safeChartHtml(clusterLabel(CLUSTERS[p.value[0]]))} / ${safeChartHtml(featureLabel(FEATURES[p.value[1]]))}<br>${tooltipLine(chartText('metrics.elasticity'), formatChartNumber(p.value[3], 4))}`,
         },
         grid: { left: 100, right: 80, top: 10, bottom: 40 },
         xAxis: { type: 'category', data: CLUSTERS.map(clusterLabel) },
         yAxis: { type: 'category', data: FEATURES.map(featureLabel) },
-        visualMap: heatVisualMap(0, undefined, 4, ['#fff', '#fee0d2', '#fc9272', '#de2d26', '#a50f15']),
-        series: [{ type: 'heatmap', data, label: { show: true, fontSize: 9, formatter: p => p.value[2] !== undefined ? formatChartNumber(p.value[2], 3) : '', color: '#333', textBorderColor: '#fff', textBorderWidth: 2 } }],
+        visualMap: {
+            ...heatVisualMap(0, maxLogValue, 2, SEQUENTIAL_COLORS),
+            formatter: value => formatChartNumber(Math.expm1(value), 2),
+        },
+        series: [heatmapSeries(data, 3, maxLogValue, 3, { colorValueIndex: 2 })],
     });
 }
 
@@ -656,45 +772,26 @@ function renderHetRadar(wetland) {
 
     const shapData = DATA.byCluster.shap_importance;
     const items = shapData[wetland] || {};
-    const featureLabels = FEATURES.map(featureLabel);
-
-    let maxVal = 0;
-    CLUSTERS.forEach(cluster => {
+    const data = [];
+    CLUSTERS.forEach((cluster, ci) => {
         const clusterItems = items[cluster] || [];
-        clusterItems.forEach(d => { maxVal = Math.max(maxVal, d.mean_abs_SHAP); });
-    });
-
-    const indicator = featureLabels.map(name => ({ name, max: maxVal * 1.1 }));
-    const seriesData = [];
-
-    CLUSTERS.forEach(cluster => {
-        const clusterItems = items[cluster] || [];
-        const values = FEATURES.map(feature => {
+        FEATURES.forEach((feature, fi) => {
             const found = clusterItems.find(d => d.Feature === feature);
-            return found ? found.mean_abs_SHAP : 0;
-        });
-        seriesData.push({
-            name: clusterLabel(cluster),
-            value: values,
-            lineStyle: { width: 2 },
-            areaStyle: { opacity: 0.1 },
+            data.push([ci, fi, roundChartValue(found ? found.mean_abs_SHAP : 0, 4)]);
         });
     });
+    const maxValue = chartMax(data.map(d => d[2]));
 
     setLocalizedChartOption(chart, {
         aria: chartAria('heterogeneityRadar'),
         tooltip: {
-            formatter: p => {
-                const values = Array.isArray(p.value) ? p.value : [];
-                const lines = [safeChartHtml(p.name)];
-                FEATURES.forEach((feature, index) => lines.push(tooltipLine(featureLabel(feature), formatChartNumber(values[index], 4))));
-                return lines.join('<br>');
-            },
+            formatter: p => `${safeChartHtml(clusterLabel(CLUSTERS[p.value[0]]))} / ${safeChartHtml(featureLabel(FEATURES[p.value[1]]))}<br>${tooltipLine(chartText('metrics.shap'), formatChartNumber(p.value[2], 4))}`,
         },
-        legend: { data: CLUSTERS.map(clusterLabel), bottom: 0 },
-        radar: { indicator, radius: '65%', axisName: { fontSize: 10 } },
-        series: [{ type: 'radar', data: seriesData }],
-        color: CLUSTERS.map(cluster => CLUSTER_COLORS[cluster]),
+        grid: { left: 112, right: 80, top: 12, bottom: 40 },
+        xAxis: { type: 'category', data: CLUSTERS.map(clusterLabel) },
+        yAxis: { type: 'category', data: FEATURES.map(featureLabel) },
+        visualMap: heatVisualMap(0, maxValue, 4, SEQUENTIAL_COLORS),
+        series: [heatmapSeries(data, 4, maxValue)],
     });
 }
 
@@ -706,24 +803,22 @@ function renderHetGroup(wetland) {
     const groups = Object.keys(GROUP_COLORS);
     const wetlandGroup = groupData[wetland] || {};
 
-    const series = CLUSTERS.map(cluster => ({
-        name: clusterLabel(cluster),
-        type: 'bar',
-        data: groups.map(group => roundChartValue(wetlandGroup[cluster]?.[group] || 0, 4)),
-    }));
+    const data = [];
+    CLUSTERS.forEach((cluster, ci) => {
+        groups.forEach((group, gi) => data.push([ci, gi, roundChartValue(wetlandGroup[cluster]?.[group] || 0, 4)]));
+    });
+    const maxValue = chartMax(data.map(d => d[2]));
 
     setLocalizedChartOption(chart, {
         aria: chartAria('heterogeneityGroup'),
         tooltip: {
-            trigger: 'axis', axisPointer: { type: 'shadow' },
-            formatter: params => axisTooltip(params, chartText('axes.groupShap'), 4),
+            formatter: p => `${safeChartHtml(clusterLabel(CLUSTERS[p.value[0]]))} / ${safeChartHtml(groupLabel(groups[p.value[1]]))}<br>${tooltipLine(chartText('axes.groupShap'), formatChartNumber(p.value[2], 4))}`,
         },
-        legend: { data: CLUSTERS.map(clusterLabel), bottom: 0, textStyle: { fontSize: 10 } },
-        grid: { left: 50, right: 20, top: 10, bottom: 50 },
-        xAxis: { type: 'category', data: groups.map(groupLabel) },
-        yAxis: numericAxis(chartText('axes.groupShap'), 4),
-        series,
-        color: CLUSTERS.map(cluster => CLUSTER_COLORS[cluster]),
+        grid: { left: 72, right: 72, top: 10, bottom: 36 },
+        xAxis: { type: 'category', data: CLUSTERS.map(clusterLabel), axisLabel: { fontSize: 10 } },
+        yAxis: { type: 'category', data: groups.map(groupLabel), axisLabel: { fontSize: 10 } },
+        visualMap: heatVisualMap(0, maxValue, 4, SEQUENTIAL_COLORS),
+        series: [heatmapSeries(data, 4, maxValue)],
     });
 }
 
@@ -761,36 +856,28 @@ function renderHetDep(wetland) {
     if (!chart || !DATA.dependenceSummary) return;
 
     const summary = DATA.dependenceSummary;
-    const series = [];
-
-    CLUSTERS.forEach(cluster => {
-        const values = FEATURES.map(feature => {
+    const data = [];
+    CLUSTERS.forEach((cluster, ci) => {
+        FEATURES.forEach((feature, fi) => {
             const found = summary.find(d =>
                 d.Level === 'Cluster' && d.Wetland_Code === wetland &&
                 d.Cluster_Code === cluster && d.Feature_Code === feature);
-            return found ? found.mean_SHAP : 0;
-        });
-        series.push({
-            name: clusterLabel(cluster),
-            type: 'line',
-            data: values,
-            smooth: true,
-            symbol: 'circle',
-            symbolSize: 6,
+            data.push([ci, fi, roundChartValue(found ? found.mean_SHAP : 0, 4)]);
         });
     });
+    const maxAbsValue = chartMax(data.map(d => Math.abs(d[2])));
 
     setLocalizedChartOption(chart, {
         aria: chartAria('heterogeneityDependence'),
         tooltip: {
-            trigger: 'axis',
-            formatter: params => axisTooltip(params, chartText('axes.meanShap'), 4),
+            formatter: p => `${safeChartHtml(clusterLabel(CLUSTERS[p.value[0]]))} / ${safeChartHtml(featureLabel(FEATURES[p.value[1]]))}<br>${tooltipLine(chartText('axes.meanShap'), formatChartNumber(p.value[2], 4))}`,
         },
-        legend: { data: CLUSTERS.map(clusterLabel), bottom: 0 },
-        grid: { left: 60, right: 30, top: 20, bottom: 50 },
-        xAxis: { type: 'category', data: FEATURES.map(featureLabel), axisLabel: { rotate: 45, fontSize: 10 } },
-        yAxis: numericAxis(chartText('axes.meanShap'), 4),
-        series,
-        color: CLUSTERS.map(cluster => CLUSTER_COLORS[cluster]),
+        grid: { left: 112, right: 80, top: 12, bottom: 40 },
+        xAxis: { type: 'category', data: CLUSTERS.map(clusterLabel) },
+        yAxis: { type: 'category', data: FEATURES.map(featureLabel) },
+        visualMap: heatVisualMap(-maxAbsValue, maxAbsValue, 4, DIVERGING_COLORS, false, {
+            high: 'visualMap.positive', low: 'visualMap.negative',
+        }),
+        series: [heatmapSeries(data, 4, maxAbsValue, 2, { absolute: true })],
     });
 }

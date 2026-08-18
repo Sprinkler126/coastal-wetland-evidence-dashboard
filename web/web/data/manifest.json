@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.0",
+  "release_id": "beta-2026-08-18",
+  "bundle_id": "ea23ff505c95511a99f5208771ce410e283a27cb90d571c5a4e68123a0b46002",
+  "period": "2001-2022",
+  "dimensions": {
+    "wetlands": [
+      "Mangrove",
+      "Tidal_Flat",
+      "Salt_Marsh",
+      "Marsh"
+    ],
+    "clusters": [
+      "BBG",
+      "BYS",
+      "HX",
+      "PRD",
+      "YRD"
+    ],
+    "drivers": [
+      "Temp_Mean_C",
+      "Precip_Sum_mm",
+      "Evap_Sum_mm",
+      "MODIS_Urban_Area_sqkm",
+      "Impervious_sqkm",
+      "Unified_NTL_Index",
+      "GDP_per_capita",
+      "Secondary_GDP_Share",
+      "Total_Population",
+      "Pop_Density",
+      "Cropland_sqkm"
+    ]
+  },
+  "datasets": {
+    "global": {
+      "file": "global.json",
+      "format": "json",
+      "schema_version": "legacy-model-1.0.0",
+      "required_by": [
+        "importance"
+      ],
+      "sha256": "2312837eeb7cb187ec3b03bac6aa56798522212875c9d2f89d20db3cada8cc08",
+      "size_bytes": 572619
+    },
+    "byCluster": {
+      "file": "by_cluster.json",
+      "format": "json",
+      "schema_version": "legacy-model-1.0.0",
+      "required_by": [
+        "importance",
+        "heterogeneity"
+      ],
+      "sha256": "e2465b8991d1d2699b5d90522353eb413d13b1f4f59c3dc64a61b6a8a5c4020d",
+      "size_bytes": 2922130
+    },
+    "dependence": {
+      "file": "dependence.json",
+      "format": "json",
+      "schema_version": "legacy-model-1.0.0",
+      "required_by": [
+        "dependence"
+      ],
+      "sha256": "57ca0b2da6981f4882533a3be97581717fae49418d403691b41b05b6e83337b9",
+      "size_bytes": 1033907
+    },
+    "dependenceSummary": {
+      "file": "dependence_summary.json",
+      "format": "json",
+      "schema_version": "legacy-model-1.0.0",
+      "required_by": [
+        "heterogeneity"
+      ],
+      "sha256": "08b21de1945116f0d34956975f642f5d6a5f8b59c1bf069740bcbd6c7e4de0b6",
+      "size_bytes": 109654
+    },
+    "partialEffect": {
+      "file": "partial_effect.json",
+      "format": "json",
+      "schema_version": "legacy-model-1.0.0",
+      "required_by": [
+        "partial"
+      ],
+      "sha256": "8adc29d2ec81c683f13c679ee57ae2ae7e9af14315d69b7dd9681a43ed6b28da",
+      "size_bytes": 234763
+    },
+    "partialEffectSummary": {
+      "file": "partial_effect_summary.json",
+      "format": "json",
+      "schema_version": "legacy-model-1.0.0",
+      "required_by": [
+        "partial"
+      ],
+      "sha256": "7e1e7c0f84f8d9f4b5a4db086ce2e2268767d5949cb6e79965852ae809ea87cf",
+      "size_bytes": 134934
+    },
+    "evidenceBundle": {
+      "file": "evidence_bundle.json",
+      "format": "json",
+      "schema_version": "1.0.0",
+      "required_by": [
+        "overview",
+        "region"
+      ],
+      "sha256": "a2580d36b5b2631cae2ec2b9160df1312b4ca27cb69069fe63611d7710bb8a65",
+      "size_bytes": 1713404
+    }
+  }
+}

@@ -30,7 +30,6 @@ jobs:
         run: |
           node scripts/test-i18n.mjs
           node scripts/test-data-contracts.mjs
-          node scripts/test-ai-runtime.mjs
           for file in web/web/js/*.js scripts/*.mjs; do node --check "$file"; done
 
       - name: Verify Pages artifact
@@ -38,8 +37,8 @@ jobs:
           test -f web/web/index.html
           test -f web/web/.nojekyll
           test -f web/web/vendor/echarts.min.js
+          test -f web/web/data/manifest.json
           test -f web/web/data/evidence_bundle.json
-          test -f web/web/data/ai_explanation_inputs.json
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

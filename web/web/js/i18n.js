@@ -24,8 +24,6 @@
         'nav.partial': '局部效应',
         'nav.heterogeneity': '城市异质性',
         'nav.region': '区域下钻',
-        'nav.ai': 'AI 解释',
-        'nav.actions': '行动与简报',
 
         'common.all': '全部',
         'common.mainNavigation': '主导航',
@@ -57,6 +55,8 @@
         'common.samples': '{count} 个样本',
         'common.units': '{count} 个空间单元',
         'common.years': '{count} 年',
+        'data.unavailableTitle': '此部分暂不可用',
+        'data.retry': '重试',
 
         'wetland.Mangrove': '红树林',
         'wetland.Tidal_Flat': '潮滩',
@@ -547,8 +547,6 @@
         'nav.partial': 'Partial Effects',
         'nav.heterogeneity': 'City Heterogeneity',
         'nav.region': 'Region Drill-down',
-        'nav.ai': 'AI Explanation',
-        'nav.actions': 'Actions & Briefs',
 
         'common.all': 'All',
         'common.mainNavigation': 'Main navigation',
@@ -580,6 +578,8 @@
         'common.samples': '{count} samples',
         'common.units': '{count} spatial units',
         'common.years': '{count} years',
+        'data.unavailableTitle': 'This section is unavailable',
+        'data.retry': 'Retry',
 
         'wetland.Mangrove': 'Mangrove',
         'wetland.Tidal_Flat': 'Tidal Flat',

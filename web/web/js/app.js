@@ -18,6 +18,46 @@ function activePageName() {
     return document.querySelector('.page.active')?.id?.replace(/^page-/, '') || 'overview';
 }
 
+function renderPageContent(pageName) {
+    const required = getPageDatasets(pageName);
+    if (required.some(key => getDatasetState(key).status !== 'loaded')) {
+        renderPageUnavailable(pageName, required);
+        return;
+    }
+    if (pageName === 'overview') { renderOverview(); window._overviewRendered = true; }
+    if (pageName === 'importance') { updateImportance(); window._importanceRendered = true; }
+    if (pageName === 'dependence') { updateDependence(); window._dependenceRendered = true; }
+    if (pageName === 'partial') { updatePartial(); window._partialRendered = true; }
+    if (pageName === 'heterogeneity') { updateHeterogeneity(); window._hetRendered = true; }
+    if (pageName === 'region') renderRegionPage();
+}
+
+function renderPageUnavailable(pageName, datasetKeys) {
+    const containers = {
+        overview: ['evidence-matrix'], importance: ['chart-imp-heatmap', 'chart-imp-bar'],
+        dependence: ['chart-dependence'], partial: ['chart-partial', 'chart-elasticity'],
+        heterogeneity: ['chart-het-radar', 'chart-het-group', 'het-top3-table', 'chart-het-dep'],
+        region: ['region-comparison', 'region-units', 'region-heatmap'],
+    };
+    (containers[pageName] || []).forEach(id => renderDatasetUnavailable(document.getElementById(id), datasetKeys));
+}
+
+function renderDatasetUnavailable(container, datasetKeys) {
+    if (!container) return;
+    const details = datasetKeys.map(key => {
+        const error = getDatasetError(key);
+        return `${key}: ${error?.message || msg('common.unavailable', 'Unavailable')}`;
+    }).join(' · ');
+    container.innerHTML = `<div class="loading error-state" role="status"><strong>${html(msg('data.unavailableTitle', 'This section is unavailable'))}</strong><p>${html(details)}</p><button class="secondary-action" type="button" onclick="retryPageData('${html(activePageName())}')">${html(msg('data.retry', 'Retry'))}</button></div>`;
+}
+
+async function retryPageData(pageName = activePageName()) {
+    const keys = getPageDatasets(pageName);
+    keys.forEach(key => { const state = getDatasetState(key); state.status = 'idle'; state.error = null; });
+    await ensureData(keys);
+    renderPageContent(pageName);
+}
+
 function resizeActiveCharts() {
     setTimeout(() => {
         document.querySelectorAll('.page.active .chart-container').forEach(dom => {
@@ -40,32 +80,17 @@ function showPage(pageName) {
     if (page) page.classList.add('active');
 
     const tabs = document.querySelectorAll('.nav-tab');
-    const tabMap = { overview: 0, importance: 1, dependence: 2, partial: 3, heterogeneity: 4, region: 5, ai: 6, actions: 7 };
+    const tabMap = { overview: 0, importance: 1, dependence: 2, partial: 3, heterogeneity: 4, region: 5 };
     if (tabMap[pageName] !== undefined && tabs[tabMap[pageName]]) tabs[tabMap[pageName]].classList.add('active');
 
-    if (pageName === 'overview' && !window._overviewRendered) {
-        renderOverview();
-        window._overviewRendered = true;
+    const requiredDatasets = getPageDatasets(pageName);
+    if (requiredDatasets.length) {
+        const loadingTargets = { overview: ['evidence-matrix'], dependence: ['chart-dependence'], partial: ['chart-partial', 'chart-elasticity'], heterogeneity: ['chart-het-radar'], region: ['region-comparison'] }[pageName] || [];
+        loadingTargets.forEach(id => { const target = document.getElementById(id); if (target) target.innerHTML = `<div class="loading" role="status">${html(msg('common.loading', 'Loading…'))}</div>`; });
+        ensureData(requiredDatasets).then(() => renderPageContent(pageName));
+    } else {
+        renderPageContent(pageName);
     }
-    if (pageName === 'importance' && !window._importanceRendered) {
-        updateImportance();
-        window._importanceRendered = true;
-    }
-    if (pageName === 'dependence' && !window._dependenceRendered) {
-        updateDependence();
-        window._dependenceRendered = true;
-    }
-    if (pageName === 'partial' && !window._partialRendered) {
-        updatePartial();
-        window._partialRendered = true;
-    }
-    if (pageName === 'heterogeneity' && !window._hetRendered) {
-        updateHeterogeneity();
-        window._hetRendered = true;
-    }
-    if (pageName === 'region') renderRegionPage();
-    if (pageName === 'ai') renderAiPage();
-    if (pageName === 'actions') renderActionsPage();
     resizeActiveCharts();
 }
 
@@ -115,8 +140,25 @@ function javascriptArgument(value) {
     return html(JSON.stringify(String(value ?? '')).replace(/</g, '\\u003c'));
 }
 
+function renderDatasetSummary() {
+    const bundle = DATA.evidenceBundle;
+    const quality = bundle?.panel_quality || {};
+    const values = {
+        'overview-period-value': quality.period || '2001–2022',
+        'overview-observations-value': quality.rows,
+        'overview-spatial-units-value': quality.spatial_units,
+        'overview-clusters-value': bundle?.enumerations?.clusters?.length,
+        'overview-wetlands-value': bundle?.enumerations?.wetlands?.length,
+    };
+    Object.entries(values).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element && value !== undefined && value !== null) element.textContent = id === 'overview-period-value' ? String(value).replace('-', '–') : formatEvidenceNumber(value, 0);
+    });
+}
+
 function renderOverview() {
     const matrix = document.getElementById('evidence-matrix');
+    renderDatasetSummary();
     if (!DATA.evidenceBundle) {
         if (matrix) matrix.innerHTML = `<div class="loading error-state"><strong>${html(msg('overview.evidenceUnavailable.title', 'Evidence navigation is unavailable'))}</strong><p>${html(DATA.evidenceError?.message || msg('overview.evidenceUnavailable.message', 'The Day 3 evidence bundle could not be loaded. Open this page through an HTTP server.'))}</p></div>`;
         return;
@@ -236,7 +278,7 @@ function renderEvidenceDrawer(wetland, cluster) {
     const modelStatus = item.model_summary?.status || unavailableText();
     const flags = (trend.quality_flag_ids || []).map(id => DATA.evidenceBundle._flagsById.get(id)?.flag || id);
     const risk = item.risk_matrix || {};
-    document.getElementById('drawer-content').innerHTML = `<p class="eyebrow">${html(msg('drawer.evidenceSummary', 'Evidence summary'))} · ${html(trend.scale || unavailableText())}</p><h2 id="drawer-title">${html(WETLAND_LABELS[wetland])} · ${html(CLUSTER_LABELS[cluster])}</h2><div class="drawer-status badge-${display.state}">${html(display.label)} · ${html(risk.Cell_Label || 'Figure 14')}</div><p class="drawer-warning">${html(msg('drawer.figure14Boundary', '{note} Figure 14 classifications are source screening/review categories, not future-risk probabilities.', { note: display.note }))}</p><section class="drawer-section"><h3>${html(msg('drawer.historicalFacts', 'Historical facts (FACT)'))}</h3><p>${html(trend.period?.label || unavailableText())} · ${html(trend.scale || unavailableText())} · ${html(trend.method || unavailableText())}</p><dl class="drawer-metrics"><div><dt>${html(msg('metrics.startToEnd', 'Start → end'))}</dt><dd>${formatEvidenceNumber(metrics.start_value)} → ${formatEvidenceNumber(metrics.end_value)}</dd></div><div><dt>${html(msg('metrics.absoluteChange', 'Absolute change'))}</dt><dd>${formatEvidenceNumber(metrics.absolute_change)}</dd></div><div><dt>${html(msg('metrics.changeRate', 'Change rate'))}</dt><dd>${formatEvidenceRate(metrics)}</dd></div><div><dt>${html(msg('metrics.annualSlope', 'Annual slope'))}</dt><dd>${formatEvidenceNumber(metrics.slope_per_year, 2)}</dd></div><div><dt>${html(msg('metrics.sampleCoverage', 'Sample coverage'))}</dt><dd>${dynamicText(msg('metrics.coverageValue', '{years} years · {units} units', { years: formatEvidenceNumber(metrics.observations, 0), units: formatEvidenceNumber(metrics.spatial_units, 0) }))}</dd></div></dl></section><section class="drawer-section"><h3>${html(msg('drawer.figure14SupportingEvidence', 'Figure 14 supporting evidence'))}</h3><p>${html(msg('drawer.evidenceSupportGrade', 'Evidence support grade: {value}', { value: risk.Evidence_Support_Grade || unavailableText() }))}</p><p>${html(risk.Evidence_Notes || msg('drawer.noAdditionalNotes', 'No additional source note is available.'))}</p><p>${html(msg('drawer.twfeNegativeTerms', 'TWFE significant negative terms: {value}', { value: risk.Regional_TWFE_significant_negative_terms_p_lt_0_10 || unavailableText() }))}</p><p>${html(msg('drawer.shapTop3', 'SHAP top 3: {value}', { value: risk.Cluster_SHAP_top3 || unavailableText() }))}</p><p>${html(msg('drawer.partialTop3', 'Partial-effect top 3: {value}', { value: risk.Cluster_partial_effect_top3_by_elasticity || unavailableText() }))}</p><p>${html(msg('drawer.gmmLagTerms', 'GMM lag terms: {value}', { value: risk.Wetland_GMM_lag_status || unavailableText() }))}</p></section><section class="drawer-section"><h3>${html(msg('drawer.modelsAndLimitations', 'Models and limitations'))}</h3><p>${html(msg('drawer.regionalModelStatus', 'Regional model status: {value}', { value: modelStatus }))}</p><ul>${[...(trend.limitations || []), ...models.slice(0, 3).flatMap(model => model.limitations || [])].map(text => `<li>${html(text)}</li>`).join('')}</ul>${flags.length ? `<p>${html(msg('drawer.qualityFlags', 'Quality flags: {flags}', { flags: flags.join(', ') }))}</p>` : ''}</section><section class="drawer-source"><h3>${html(msg('drawer.source', 'Source'))}</h3><p>${html(trend.source?.path || unavailableText())}</p><p>${html(msg('drawer.sha256', 'SHA-256: {value}', { value: trend.source?.sha256 || unavailableText() }))}</p></section><button class="secondary-action drawer-action" type="button" onclick="openAiExplanation('${cluster}', '${wetland}', null, null, ${javascriptArgument(msg('ai.explainEvidenceQuestion', 'Explain evidence for {cluster} {wetland}', { cluster: CLUSTER_LABELS[cluster], wetland: WETLAND_LABELS[wetland] }))})">${html(msg('drawer.generateAiExplanation', 'Generate AI explanation'))}</button><button class="primary-action drawer-action" type="button" onclick="openActionTaskFromEvidence('cluster', '${cluster}', null, '${wetland}')">${html(msg('drawer.createTask', 'Create task from this evidence'))}</button><button id="drawer-region-action" class="primary-action drawer-action" type="button">${html(msg('drawer.openUnitList', 'Open spatial-unit list'))}</button>`;
+    document.getElementById('drawer-content').innerHTML = `<p class="eyebrow">${html(msg('drawer.evidenceSummary', 'Evidence summary'))} · ${html(trend.scale || unavailableText())}</p><h2 id="drawer-title">${html(WETLAND_LABELS[wetland])} · ${html(CLUSTER_LABELS[cluster])}</h2><div class="drawer-status badge-${display.state}">${html(display.label)} · ${html(risk.Cell_Label || 'Figure 14')}</div><p class="drawer-warning">${html(msg('drawer.figure14Boundary', '{note} Figure 14 classifications are source screening/review categories, not future-risk probabilities.', { note: display.note }))}</p><section class="drawer-section"><h3>${html(msg('drawer.historicalFacts', 'Historical facts (FACT)'))}</h3><p>${html(trend.period?.label || unavailableText())} · ${html(trend.scale || unavailableText())} · ${html(trend.method || unavailableText())}</p><dl class="drawer-metrics"><div><dt>${html(msg('metrics.startToEnd', 'Start → end'))}</dt><dd>${formatEvidenceNumber(metrics.start_value)} → ${formatEvidenceNumber(metrics.end_value)}</dd></div><div><dt>${html(msg('metrics.absoluteChange', 'Absolute change'))}</dt><dd>${formatEvidenceNumber(metrics.absolute_change)}</dd></div><div><dt>${html(msg('metrics.changeRate', 'Change rate'))}</dt><dd>${formatEvidenceRate(metrics)}</dd></div><div><dt>${html(msg('metrics.annualSlope', 'Annual slope'))}</dt><dd>${formatEvidenceNumber(metrics.slope_per_year, 2)}</dd></div><div><dt>${html(msg('metrics.sampleCoverage', 'Sample coverage'))}</dt><dd>${dynamicText(msg('metrics.coverageValue', '{years} years · {units} units', { years: formatEvidenceNumber(metrics.observations, 0), units: formatEvidenceNumber(metrics.spatial_units, 0) }))}</dd></div></dl></section><section class="drawer-section"><h3>${html(msg('drawer.figure14SupportingEvidence', 'Figure 14 supporting evidence'))}</h3><p>${html(msg('drawer.evidenceSupportGrade', 'Evidence support grade: {value}', { value: risk.Evidence_Support_Grade || unavailableText() }))}</p><p>${html(risk.Evidence_Notes || msg('drawer.noAdditionalNotes', 'No additional source note is available.'))}</p><p>${html(msg('drawer.twfeNegativeTerms', 'TWFE significant negative terms: {value}', { value: risk.Regional_TWFE_significant_negative_terms_p_lt_0_10 || unavailableText() }))}</p><p>${html(msg('drawer.shapTop3', 'SHAP top 3: {value}', { value: risk.Cluster_SHAP_top3 || unavailableText() }))}</p><p>${html(msg('drawer.partialTop3', 'Partial-effect top 3: {value}', { value: risk.Cluster_partial_effect_top3_by_elasticity || unavailableText() }))}</p><p>${html(msg('drawer.gmmLagTerms', 'GMM lag terms: {value}', { value: risk.Wetland_GMM_lag_status || unavailableText() }))}</p></section><section class="drawer-section"><h3>${html(msg('drawer.modelsAndLimitations', 'Models and limitations'))}</h3><p>${html(msg('drawer.regionalModelStatus', 'Regional model status: {value}', { value: modelStatus }))}</p><ul>${[...(trend.limitations || []), ...models.slice(0, 3).flatMap(model => model.limitations || [])].map(text => `<li>${html(text)}</li>`).join('')}</ul>${flags.length ? `<p>${html(msg('drawer.qualityFlags', 'Quality flags: {flags}', { flags: flags.join(', ') }))}</p>` : ''}</section><section class="drawer-source"><h3>${html(msg('drawer.source', 'Source'))}</h3><p>${html(trend.source?.path || unavailableText())}</p><p>${html(msg('drawer.sha256', 'SHA-256: {value}', { value: trend.source?.sha256 || unavailableText() }))}</p></section><button id="drawer-region-action" class="primary-action drawer-action" type="button">${html(msg('drawer.openUnitList', 'Open spatial-unit list'))}</button>`;
     setEvidenceDrawerRegionButton(wetland, cluster);
 }
 
@@ -376,8 +418,7 @@ function renderRegionComparison(wetland) {
         const caseLabel = cluster === 'BYS' ? msg('region.primaryCase', 'Primary case') : msg('region.bbgComparison', 'Beibu Gulf ecological comparison');
         return `<article class="comparison-card"><div class="comparison-card-head"><div><span class="eyebrow">${html(CLUSTER_LABELS[cluster])}</span><h4>${html(caseLabel)}</h4></div><span class="status-badge badge-${display.state}">${html(display.label)}</span></div><dl class="comparison-metrics">${rows.map(key => `<div><dt>${html(labels[key])}</dt><dd>${key === 'relative_change_rate' ? formatEvidenceRate(metrics) : formatEvidenceNumber(metrics[key], key === 'slope_per_year' ? 2 : 1)}</dd></div>`).join('')}<div><dt>${html(msg('metrics.spatialUnits', 'Spatial units'))}</dt><dd>${dynamicText(msg('metrics.unitCount', '{count} units', { count: formatEvidenceNumber(unitCount, 0) }))}</dd></div></dl><p class="comparison-interpretation">${html(comparisonInterpretation(cluster, wetland, metrics))}</p></article>`;
     }).join('');
-    const question = msg('ai.compareQuestion', 'Compare Bohai Sea and Beibu Gulf {wetland}', { wetland: WETLAND_LABELS[wetland] });
-    container.innerHTML = `<div class="comparison-grid">${cards}</div><div class="policy-framework"><strong>${html(msg('region.policy.title', 'Why can a one-size-fits-all strategy fail?'))}</strong><ul><li>${html(msg('region.policy.one', 'At the same 2001–2022 scale and for the same indicators, BYS and BBG have different ecological baselines and sample sizes; one threshold cannot directly determine both.'))}</li><li>${html(msg('region.policy.two', 'Area growth does not automatically demonstrate restoration success; ecological quality, connectivity, community structure, and human review evidence are still required.'))}</li><li>${html(msg('region.policy.three', 'A zero mangrove baseline in BYS is not stable success, and growth in BBG remains a historical fact rather than proof of policy effectiveness.'))}</li></ul><button class="secondary-action" type="button" onclick="openAiExplanation('BYS', '${wetland}', null, 'BBG', ${javascriptArgument(question)})">${html(msg('region.generateComparisonExplanation', 'Generate comparison explanation'))}</button></div>`;
+    container.innerHTML = `<div class="comparison-grid">${cards}</div><div class="policy-framework"><strong>${html(msg('region.policy.title', 'Why can a one-size-fits-all strategy fail?'))}</strong><ul><li>${html(msg('region.policy.one', 'At the same 2001–2022 scale and for the same indicators, BYS and BBG have different ecological baselines and sample sizes; one threshold cannot directly determine both.'))}</li><li>${html(msg('region.policy.two', 'Area growth does not automatically demonstrate restoration success; ecological quality, connectivity, community structure, and human review evidence are still required.'))}</li><li>${html(msg('region.policy.three', 'A zero mangrove baseline in BYS is not stable success, and growth in BBG remains a historical fact rather than proof of policy effectiveness.'))}</li></ul></div>`;
 }
 
 function renderRegionWetlandSummary(cluster) {
@@ -447,8 +488,7 @@ function renderUnitEvidenceCard(cluster, city, wetland) {
     const sparse = isStructuralSparse(cluster, wetland);
     const flags = (evidence.quality_flag_ids || []).map(id => DATA.evidenceBundle._flagsById.get(id)?.flag).filter(Boolean);
     const limitations = [...(evidence.limitations || []), ...(item.not_available || []), ...(sparse ? [msg('unit.structuralSparseModelLimit', 'BYS mangrove cannot be interpreted as an ordinary stable trend; the regional model failed.')] : [])];
-    const question = msg('ai.unitEvidenceQuestion', 'Explain the evidence card for {city} {wetland}', { city, wetland: WETLAND_LABELS[wetland] });
-    document.getElementById('unit-drawer-content').innerHTML = `<p class="eyebrow">${html(msg('unit.evidenceCard', 'Spatial-unit evidence card · FACT'))}</p><h2 id="unit-drawer-title">${html(city)} · ${html(WETLAND_LABELS[wetland])}</h2><div class="drawer-status ${sparse ? 'badge-insufficient-data' : 'badge-demo'}">${html(sparse ? msg('region.structuralSparse', 'Not applicable / structural sparsity') : msg('unit.historicalFact', 'Historical descriptive fact'))}</div><section class="drawer-section"><h3>${html(msg('unit.observationMethod', 'Observations and method'))}</h3><p>${html(evidence.period?.label || unavailableText())} · ${html(evidence.scale || unavailableText())} · ${html(evidence.method || unavailableText())}</p><dl class="drawer-metrics"><div><dt>${html(msg('metrics.startToEnd', 'Start → end'))}</dt><dd>${formatEvidenceNumber(metrics.start_value)} → ${formatEvidenceNumber(metrics.end_value)}</dd></div><div><dt>${html(msg('metrics.absoluteChange', 'Absolute change'))}</dt><dd>${formatEvidenceNumber(metrics.absolute_change)}</dd></div><div><dt>${html(msg('metrics.changeRate', 'Change rate'))}</dt><dd>${html(sparse ? msg('common.zeroStart', 'Not computable: start value is 0') : regionChangeLabel(metrics))}</dd></div><div><dt>${html(msg('metrics.annualSlope', 'Annual slope'))}</dt><dd>${html(sparse ? notApplicableText() : formatEvidenceNumber(metrics.slope_per_year, 2))}</dd></div><div><dt>${html(msg('metrics.sampleSize', 'Sample size'))}</dt><dd>${dynamicText(msg('metrics.yearCount', '{count} years', { count: formatEvidenceNumber(metrics.observations, 0) }))}</dd></div></dl></section><section class="drawer-section"><h3>${html(msg('unit.limitationsUnavailableEvidence', 'Limitations and unavailable evidence'))}</h3><ul>${limitations.map(text => `<li>${html(text)}</li>`).join('')}</ul>${flags.length ? `<p>${html(msg('drawer.qualityFlags', 'Quality flags: {flags}', { flags: flags.join(', ') }))}</p>` : ''}</section><section class="drawer-source"><h3>${html(msg('unit.sourceVersion', 'Source and version'))}</h3><p>${html(evidence.source?.path || unavailableText())}</p><p>${html(msg('drawer.sha256', 'SHA-256: {value}', { value: evidence.source?.sha256 || unavailableText() }))}</p><p>${html(msg('unit.contract', 'Contract: {id} · {version}', { id: DATA.evidenceBundle.contract_id, version: DATA.evidenceBundle.contract_version }))}</p></section><section class="drawer-section"><h3>${html(msg('unit.humanReview', 'Human review'))}</h3><p>${html(msg('unit.humanReviewNote', 'This is a draft evidence card; human review status has not been persisted.'))}</p></section><button class="secondary-action drawer-action" type="button" onclick="openAiExplanation('${cluster}', '${wetland}', ${javascriptArgument(city)}, null, ${javascriptArgument(question)})">${html(msg('unit.generateAiExplanation', 'Generate AI explanation from this evidence'))}</button><button class="primary-action drawer-action" type="button" onclick="openActionTaskFromEvidence('unit', '${cluster}', ${javascriptArgument(city)}, '${wetland}')">${html(msg('drawer.createTask', 'Create task from this evidence'))}</button>`;
+    document.getElementById('unit-drawer-content').innerHTML = `<p class="eyebrow">${html(msg('unit.evidenceCard', 'Spatial-unit evidence card · FACT'))}</p><h2 id="unit-drawer-title">${html(city)} · ${html(WETLAND_LABELS[wetland])}</h2><div class="drawer-status ${sparse ? 'badge-insufficient-data' : 'badge-demo'}">${html(sparse ? msg('region.structuralSparse', 'Not applicable / structural sparsity') : msg('unit.historicalFact', 'Historical descriptive fact'))}</div><section class="drawer-section"><h3>${html(msg('unit.observationMethod', 'Observations and method'))}</h3><p>${html(evidence.period?.label || unavailableText())} · ${html(evidence.scale || unavailableText())} · ${html(evidence.method || unavailableText())}</p><dl class="drawer-metrics"><div><dt>${html(msg('metrics.startToEnd', 'Start → end'))}</dt><dd>${formatEvidenceNumber(metrics.start_value)} → ${formatEvidenceNumber(metrics.end_value)}</dd></div><div><dt>${html(msg('metrics.absoluteChange', 'Absolute change'))}</dt><dd>${formatEvidenceNumber(metrics.absolute_change)}</dd></div><div><dt>${html(msg('metrics.changeRate', 'Change rate'))}</dt><dd>${html(sparse ? msg('common.zeroStart', 'Not computable: start value is 0') : regionChangeLabel(metrics))}</dd></div><div><dt>${html(msg('metrics.annualSlope', 'Annual slope'))}</dt><dd>${html(sparse ? notApplicableText() : formatEvidenceNumber(metrics.slope_per_year, 2))}</dd></div><div><dt>${html(msg('metrics.sampleSize', 'Sample size'))}</dt><dd>${dynamicText(msg('metrics.yearCount', '{count} years', { count: formatEvidenceNumber(metrics.observations, 0) }))}</dd></div></dl></section><section class="drawer-section"><h3>${html(msg('unit.limitationsUnavailableEvidence', 'Limitations and unavailable evidence'))}</h3><ul>${limitations.map(text => `<li>${html(text)}</li>`).join('')}</ul>${flags.length ? `<p>${html(msg('drawer.qualityFlags', 'Quality flags: {flags}', { flags: flags.join(', ') }))}</p>` : ''}</section><section class="drawer-source"><h3>${html(msg('unit.sourceVersion', 'Source and version'))}</h3><p>${html(evidence.source?.path || unavailableText())}</p><p>${html(msg('drawer.sha256', 'SHA-256: {value}', { value: evidence.source?.sha256 || unavailableText() }))}</p><p>${html(msg('unit.contract', 'Contract: {id} · {version}', { id: DATA.evidenceBundle.contract_id, version: DATA.evidenceBundle.contract_version }))}</p></section><section class="drawer-section"><h3>${html(msg('unit.humanReview', 'Human review'))}</h3><p>${html(msg('unit.humanReviewNote', 'This is a draft evidence card; human review status has not been persisted.'))}</p></section>`;
 }
 
 function openUnitEvidenceCard(cluster, city, wetland, trigger = document.activeElement) {
@@ -584,8 +624,6 @@ function rerenderForLocaleChange() {
     if (window._partialRendered) updatePartial();
     if (window._hetRendered) updateHeterogeneity();
     if (snapshot.page === 'region') renderRegionPage();
-    if (snapshot.page === 'ai') renderAiPage();
-    if (snapshot.page === 'actions') renderActionsPage();
     if (snapshot.sortHelpOpen) document.getElementById('region-sort-help')?.classList.remove('is-hidden');
     if (overviewWasOpen && overviewDrawerState.type === 'evidence') renderEvidenceDrawer(overviewDrawerState.wetland, overviewDrawerState.cluster);
     if (overviewWasOpen && overviewDrawerState.type === 'recommendation') renderRecommendationDrawer();
@@ -602,10 +640,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     applyStaticTranslations();
     initSelects();
     await loadAllData();
-    if (!DATA.loaded) {
-        const active = document.querySelector('.page.active');
-        if (active) active.innerHTML = `<div class="loading"><p>${html(msg('loading.failed', 'Data loading failed. Please check the data directory.'))}</p></div>`;
-        return;
-    }
+    initSelects();
     showPage('overview');
 });

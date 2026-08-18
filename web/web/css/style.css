@@ -1,14 +1,14 @@
 /* mltask global styles */
 :root {
-    --primary: #1a73e8;
-    --primary-light: #e8f0fe;
-    --bg: #f8f9fa;
+    --primary: #176b87;
+    --primary-light: #e8f4f5;
+    --bg: #f4f7f7;
     --card-bg: #fff;
-    --text: #202124;
-    --text-secondary: #5f6368;
-    --border: #dadce0;
-    --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
-    --radius: 8px;
+    --text: #17324d;
+    --text-secondary: #557087;
+    --border: #d7e1e5;
+    --shadow: 0 8px 24px rgba(23, 50, 77, 0.07);
+    --radius: 10px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -146,6 +146,7 @@ select:focus { border-color: var(--primary); }
 /* Cards */
 .card {
     background: var(--card-bg);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     margin-bottom: 16px;
@@ -153,10 +154,11 @@ select:focus { border-color: var(--primary); }
 }
 
 .card-header {
-    padding: 12px 20px;
+    padding: 14px 20px;
     border-bottom: 1px solid var(--border);
+    color: #17324d;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 650;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -167,10 +169,20 @@ select:focus { border-color: var(--primary); }
 /* Chart containers */
 .chart-container {
     width: 100%;
-    min-height: 400px;
+    height: clamp(380px, 42vw, 500px);
+    min-height: 380px;
 }
 
-.chart-container.small { min-height: 300px; }
+.chart-container.small { height: 360px; min-height: 360px; }
+
+#chart-imp-heatmap,
+#chart-imp-bar,
+#chart-elasticity,
+#chart-het-radar,
+#chart-het-dep { height: clamp(460px, 48vw, 560px); }
+
+#chart-dependence,
+#chart-partial { height: clamp(400px, 42vw, 480px); }
 
 /* Grid layout */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -178,6 +190,17 @@ select:focus { border-color: var(--primary); }
 
 @media (max-width: 900px) {
     .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+    .card-body { padding: 12px 8px; }
+    .chart-container,
+    .chart-container.small { height: 420px; min-height: 420px; }
+    #chart-imp-heatmap,
+    #chart-imp-bar,
+    #chart-elasticity,
+    #chart-het-radar,
+    #chart-het-dep { height: 500px; }
 }
 
 /* Statistic cards */
