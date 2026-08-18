@@ -130,42 +130,45 @@
             <article class="source-card">
                 <span class="source-kind" data-i18n="methods.sourceBoundaryKind">空间边界</span>
                 <h4>FAO GAUL 2015</h4>
-                <code>FAO/GAUL/2015/level0–2</code>
+                <a class="source-link" href="https://developers.google.com/earth-engine/datasets/catalog/FAO_GAUL_2015_level2" target="_blank" rel="noopener noreferrer">访问官方数据集 <span aria-hidden="true">↗</span></a>
                 <p data-i18n="methods.sourceBoundaryCopy">用国家、省级和地市级行政单元组装珠三角、长三角、海峡西岸、北部湾和环渤黄海研究区，并统一空间单元名称。</p>
                 <dl><div><dt data-i18n="methods.fieldRole">产出作用</dt><dd data-i18n="methods.sourceBoundaryRole">裁剪、分区汇总与城市群归属</dd></div></dl>
             </article>
             <article class="source-card">
                 <span class="source-kind" data-i18n="methods.sourceWetlandKind">湿地分类</span>
                 <h4>GWL_FCS30</h4>
-                <code>projects/sat-io/open-datasets/GWL_FCS30</code>
+                <a class="source-link" href="https://doi.org/10.5194/essd-15-265-2023" target="_blank" rel="noopener noreferrer">查看数据集论文 <span aria-hidden="true">↗</span></a>
                 <p data-i18n="methods.sourceWetlandCopy">逐年读取湿地分类影像，将 180–187 类码重映射为永久水体、沼泽、草本沼泽、洪泛滩、盐碱地、红树林、盐沼和潮滩，并按像元面积汇总。</p>
                 <dl><div><dt data-i18n="methods.fieldScale">处理尺度</dt><dd data-i18n="methods.sourceWetlandScale">100 m 汇总，面积单位 km²</dd></div></dl>
             </article>
             <article class="source-card">
                 <span class="source-kind" data-i18n="methods.sourceClimateKind">气候</span>
                 <h4>ERA5-Land Monthly Aggregated</h4>
-                <code>ECMWF/ERA5_LAND/MONTHLY_AGGR</code>
+                <a class="source-link" href="https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_MONTHLY_AGGR" target="_blank" rel="noopener noreferrer">访问官方数据集 <span aria-hidden="true">↗</span></a>
                 <p data-i18n="methods.sourceClimateCopy">计算年平均气温、年降水量、年蒸发量，并保留最大月降水、最热月均温和最冷月均温等极端气候代理指标。</p>
                 <dl><div><dt data-i18n="methods.fieldScale">处理尺度</dt><dd data-i18n="methods.sourceClimateScale">约 11,132 m，空间均值</dd></div></dl>
             </article>
             <article class="source-card">
                 <span class="source-kind" data-i18n="methods.sourcePopulationKind">人口</span>
                 <h4>WorldPop Global Project Population</h4>
-                <code>WorldPop/GP/100m/pop</code>
+                <a class="source-link" href="https://developers.google.com/earth-engine/datasets/catalog/WorldPop_GP_100m_pop" target="_blank" rel="noopener noreferrer">访问官方数据集 <span aria-hidden="true">↗</span></a>
                 <p data-i18n="methods.sourcePopulationCopy">按年拼接人口栅格并统计总人口，再以行政单元面积计算人口密度。mosaic 处理避免空切片造成的重命名错误。</p>
                 <dl><div><dt data-i18n="methods.fieldScale">处理尺度</dt><dd data-i18n="methods.sourcePopulationScale">100 m，总量与人/km²</dd></div></dl>
             </article>
             <article class="source-card">
                 <span class="source-kind" data-i18n="methods.sourceUrbanKind">建成区</span>
                 <h4>MODIS MCD12Q1 v061</h4>
-                <code>MODIS/061/MCD12Q1 · LC_Type1 = 13</code>
+                <a class="source-link" href="https://developers.google.com/earth-engine/datasets/catalog/MODIS_061_MCD12Q1" target="_blank" rel="noopener noreferrer">访问官方数据集 <span aria-hidden="true">↗</span></a>
                 <p data-i18n="methods.sourceUrbanCopy">使用 IGBP 土地覆盖分类中的建成区类别，按年度计算每个空间单元的 MODIS 建成区面积。</p>
                 <dl><div><dt data-i18n="methods.fieldScale">处理尺度</dt><dd data-i18n="methods.sourceUrbanScale">500 m 汇总，面积单位 km²</dd></div></dl>
             </article>
             <article class="source-card">
                 <span class="source-kind" data-i18n="methods.sourceNtlKind">夜间灯光</span>
                 <h4>DMSP-OLS + VIIRS DNB</h4>
-                <code>NOAA/DMSP-OLS · NOAA/VIIRS/DNB</code>
+                <div class="source-links">
+                    <a class="source-link" href="https://www.ncei.noaa.gov/products/dmsp-operational-linescan-system" target="_blank" rel="noopener noreferrer">DMSP-OLS <span aria-hidden="true">↗</span></a>
+                    <a class="source-link" href="https://developers.google.com/earth-engine/datasets/catalog/NOAA_VIIRS_DNB_ANNUAL_V22" target="_blank" rel="noopener noreferrer">VIIRS DNB <span aria-hidden="true">↗</span></a>
+                </div>
                 <p data-i18n="methods.sourceNtlCopy">2001–2013 年使用 DMSP stable_lights；2014–2021 年使用 VIIRS 年度 average；2022 年使用 VIIRS 月度 avg_rad 均值，并通过脚本中的跨传感器公式形成统一指数。</p>
                 <dl><div><dt data-i18n="methods.fieldScale">处理尺度</dt><dd data-i18n="methods.sourceNtlScale">500 m，空间均值</dd></div></dl>
             </article>
@@ -304,6 +307,13 @@
 </div>
 
 </div>
+
+<footer class="site-acknowledgements" role="contentinfo">
+    <div class="acknowledgements-inner">
+        <p class="eyebrow">致谢</p>
+        <p>感谢<a href="https://scholar.google.com/citations?view_op=view_org&amp;hl=en&amp;org=2533886145175476393" target="_blank" rel="noopener noreferrer">香港大学</a>对本项目的支持，以及<a href="https://scholar.google.com/citations?user=jChxiKUAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Jin Wu 教授</a>（香港大学副教授）在研究与实现过程中的专业指导。</p>
+    </div>
+</footer>
 
 <script src="js/i18n.js"></script>
 <script src="js/data.js"></script>

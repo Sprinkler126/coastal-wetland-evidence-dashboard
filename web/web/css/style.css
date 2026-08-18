@@ -486,6 +486,9 @@ button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-
 .source-card { display: flex; min-width: 0; flex-direction: column; padding: 18px; border: 1px solid #d5dee4; border-radius: 8px; background: #fff; box-shadow: 0 4px 14px rgba(23,50,77,.04); }
 .source-kind { align-self: flex-start; padding: 3px 8px; border-radius: 999px; background: #e8f4f5; color: #176b87; font-size: 10px; font-weight: 800; letter-spacing: .05em; }
 .source-card h4 { margin: 10px 0 5px; color: #17324d; font-size: 17px; }
+.source-link, .source-links { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.source-link { align-self: flex-start; color: #176b87; font-size: 12px; font-weight: 700; text-decoration: none; }
+.source-link:hover { color: #0d526a; text-decoration: underline; text-underline-offset: 3px; }
 .source-card code { display: block; overflow-wrap: anywhere; color: #176b87; font-size: 11px; }
 .source-card p { flex: 1; margin: 12px 0 14px; color: #466176; font-size: 13px; }
 .source-card dl { margin: 0; padding-top: 11px; border-top: 1px solid #e4ebee; }
@@ -845,6 +848,22 @@ select,
 .methods-table th,
 th { background: rgba(237, 246, 248, 0.82); }
 
+.site-acknowledgements { max-width: 1280px; margin: 0 auto; padding: 4px 18px 28px; }
+.acknowledgements-inner {
+    padding: 16px 20px;
+    border: 1px solid rgba(199, 216, 222, 0.82);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 8px 22px rgba(16, 53, 68, 0.06);
+    color: #466176;
+    font-size: 13px;
+    backdrop-filter: blur(14px) saturate(118%);
+    -webkit-backdrop-filter: blur(14px) saturate(118%);
+}
+.acknowledgements-inner .eyebrow { margin-bottom: 4px; }
+.acknowledgements-inner a { color: #176b87; font-weight: 700; text-decoration: none; }
+.acknowledgements-inner a:hover { color: #0d526a; text-decoration: underline; text-underline-offset: 3px; }
+
 /* Dataset paths and identifiers are interface labels, not source code. */
 code {
     font-family: inherit;
@@ -858,6 +877,8 @@ code {
 
 @media (max-width: 560px) {
     .main { padding: 12px; }
+    .site-acknowledgements { padding: 4px 12px 20px; }
+    .acknowledgements-inner { padding: 14px 16px; }
     .overview-hero,
     .methods-hero,
     .region-hero,
