@@ -45,9 +45,11 @@ for (const key of new Set(markupKeys)) {
 }
 assert.match(indexHtml, /id="page-methods"/);
 assert.match(indexHtml, /showPage\('methods'\)/);
-const overviewHero = indexHtml.slice(indexHtml.indexOf('<section class="overview-hero">'), indexHtml.indexOf('<div class="stat-cards overview-stats">'));
+const overviewHero = indexHtml.slice(indexHtml.indexOf('<section class="overview-hero">'), indexHtml.indexOf('<section class="notice notice-info">'));
 assert.doesNotMatch(overviewHero, /湿地守望|openRecommendationDrawer|overview\.recommendation/, 'the overview hero stays academic and contains no recommendation action');
 assert.match(overviewHero, /双向固定效应模型/);
+assert.match(overviewHero, /class="overview-hero-intro"/);
+assert.match(overviewHero, /class="stat-cards overview-stats"/, 'overview statistics are integrated into the hero');
 const methodsOutput = indexHtml.slice(indexHtml.indexOf('methods-output-title'), indexHtml.indexOf('methods-boundary-title'));
 const [methodsReaderView, methodsTechnicalTrace] = methodsOutput.split('<details class="methods-technical-trace">');
 assert.doesNotMatch(methodsReaderView, /evidence\/data\/|bundle_id|SHA-256/, 'the methods table uses reader-facing artifact names');
