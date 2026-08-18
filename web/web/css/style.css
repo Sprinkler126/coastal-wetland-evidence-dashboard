@@ -2,36 +2,43 @@
 :root {
     --primary: #176b87;
     --primary-light: #e8f4f5;
-    --bg: #f4f7f7;
-    --card-bg: #fff;
+    --bg: #e7eff0;
+    --card-bg: rgba(255, 255, 255, 0.84);
     --text: #17324d;
     --text-secondary: #557087;
     --border: #d7e1e5;
-    --shadow: 0 8px 24px rgba(23, 50, 77, 0.07);
-    --radius: 10px;
+    --shadow: 0 10px 28px rgba(16, 53, 68, 0.09);
+    --radius: 16px;
+    --radius-inner: 12px;
+    --radius-control: 10px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
-    background: var(--bg);
+    min-height: 100vh;
+    background:
+        linear-gradient(rgba(232, 241, 241, 0.68), rgba(232, 241, 241, 0.76)),
+        url('../assets/coastal-wetland-aerial-bg.png') center / cover fixed;
     color: var(--text);
     line-height: 1.6;
 }
 
 /* Top navigation */
 .navbar {
-    background: var(--primary);
+    background: rgba(13, 77, 98, 0.86);
     color: #fff;
-    padding: 0 24px;
+    padding: 0 max(24px, calc((100vw - 1280px) / 2 + 18px));
     display: flex;
     align-items: center;
     height: 56px;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 18px rgba(13, 48, 61, 0.15);
+    backdrop-filter: blur(18px) saturate(125%);
+    -webkit-backdrop-filter: blur(18px) saturate(125%);
 }
 
 .navbar h1 {
@@ -98,7 +105,7 @@ body {
 .nav-tab.active { background: rgba(255,255,255,0.25); color: #fff; font-weight: 500; }
 
 /* Main content */
-.main { max-width: 1400px; margin: 0 auto; padding: 20px; }
+.main { max-width: 1280px; margin: 0 auto; padding: 18px; }
 
 .page { display: none; }
 .page.active { display: block; }
@@ -110,6 +117,9 @@ body {
     padding: 16px 20px;
     margin-bottom: 16px;
     box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
@@ -151,6 +161,8 @@ select:focus { border-color: var(--primary); }
     box-shadow: var(--shadow);
     margin-bottom: 16px;
     overflow: hidden;
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
 }
 
 .card-header {
@@ -217,6 +229,9 @@ select:focus { border-color: var(--primary); }
     padding: 16px;
     box-shadow: var(--shadow);
     text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.74);
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
 }
 
 .stat-card .value {
@@ -653,4 +668,192 @@ button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-
     border-radius: 0 var(--radius) var(--radius) 0;
     font-size: 13px;
     color: var(--text-secondary);
+}
+
+/* Radius hierarchy: page surfaces → nested panels → controls. */
+.controls,
+.card,
+.stat-card,
+.overview-hero,
+.methods-hero,
+.region-hero,
+.ai-hero,
+.actions-hero,
+.figure14-explainer,
+.region-comparison,
+.quality-distribution-card,
+.quality-flags-card,
+.methods-table-wrap,
+.unit-list,
+.heatmap-scroll { border-radius: var(--radius); }
+
+.methods-stat-grid article,
+.source-card,
+.workflow-grid li,
+.figure14-method-grid article,
+.figure14-formula,
+.support-grade,
+.comparison-card,
+.region-toolbar,
+.region-summary-card,
+.ai-answer-card,
+.action-task-item,
+.brief-card,
+.trend-card,
+.recommendation-strip,
+.quality-category { border-radius: var(--radius-inner); }
+
+select,
+.primary-action,
+.secondary-action,
+.segmented-control,
+.ai-question-box textarea,
+.action-task-form input,
+.action-task-form textarea,
+.action-task-form select,
+.citation-chip,
+.source-trace div,
+.ai-guardrail-copy { border-radius: var(--radius-control); }
+
+.notice,
+.info-box,
+.sort-help,
+.policy-framework,
+.quality-boundary-card,
+.boundary-grid article,
+.needed-data,
+.audit-log { border-radius: 0 var(--radius-inner) var(--radius-inner) 0; }
+
+/* The matrix becomes one rounded surface rather than isolated cells on a square table. */
+.evidence-matrix {
+    overflow: hidden;
+    border: 1px solid rgba(199, 216, 222, 0.84);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.66);
+    box-shadow: 0 8px 22px rgba(16, 53, 68, 0.06);
+    backdrop-filter: blur(14px) saturate(118%);
+    -webkit-backdrop-filter: blur(14px) saturate(118%);
+}
+
+.screening-matrix-scroll { padding: 8px; }
+
+.screening-matrix-table {
+    border-collapse: separate;
+    border-spacing: 8px;
+}
+
+.screening-matrix-table th {
+    position: static;
+    border: 0;
+    background: transparent;
+}
+
+.matrix-cell { border-radius: var(--radius-inner); }
+
+.status-badge,
+.drawer-status,
+.quality-chip { border-radius: var(--radius-control); }
+
+/* Compact glass treatment: keeps dense evidence pages readable over the wetland base layer. */
+.overview-hero,
+.methods-hero,
+.region-hero,
+.ai-hero,
+.actions-hero {
+    padding: 26px 28px;
+    box-shadow: 0 14px 34px rgba(13, 48, 61, 0.16);
+}
+
+.overview-hero,
+.methods-hero,
+.ai-hero,
+.actions-hero {
+    background: linear-gradient(135deg, rgba(18, 59, 78, 0.91), rgba(20, 104, 126, 0.82));
+    backdrop-filter: blur(18px) saturate(120%);
+    -webkit-backdrop-filter: blur(18px) saturate(120%);
+}
+
+.region-hero { background: rgba(20, 57, 74, 0.88); }
+
+.overview-section,
+.methods-section,
+.region-section { margin: 22px 0; }
+
+.section-heading { margin-bottom: 12px; }
+
+.methods-stat-grid,
+.source-grid,
+.workflow-grid,
+.figure14-method-grid,
+.quality-grid,
+.comparison-grid { gap: 12px; }
+
+.methods-stat-grid article,
+.source-card,
+.trend-card,
+.quality-distribution-card,
+.comparison-card,
+.region-summary-card,
+.ai-answer-card,
+.action-task-item,
+.brief-card,
+.methods-table-wrap,
+.unit-list,
+.heatmap-scroll,
+.region-toolbar,
+.figure14-explainer {
+    background: rgba(255, 255, 255, 0.80);
+    border-color: rgba(199, 216, 222, 0.82);
+    box-shadow: 0 8px 22px rgba(16, 53, 68, 0.06);
+    backdrop-filter: blur(14px) saturate(118%);
+    -webkit-backdrop-filter: blur(14px) saturate(118%);
+}
+
+/* Semantic emphasis cards keep a dark base so their light text remains legible. */
+.quality-flags-card {
+    background: linear-gradient(145deg, #17324d 0%, #176b87 100%);
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 10px 24px rgba(13, 48, 61, 0.18);
+    color: #fff;
+}
+
+.quality-flags-card .quality-kicker { color: #c8e4eb; }
+.quality-flags-card p { color: #e0f0f3; }
+
+.matrix-cell,
+.support-grade,
+.workflow-grid li,
+.figure14-method-grid article,
+.source-trace div,
+.citation-chip {
+    box-shadow: 0 5px 16px rgba(16, 53, 68, 0.05);
+}
+
+.notice,
+.sort-help,
+.policy-framework,
+.quality-boundary-card,
+.boundary-grid article,
+.needed-data,
+.audit-log {
+    box-shadow: 0 7px 18px rgba(16, 53, 68, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.card-header,
+.methods-table th,
+th { background: rgba(237, 246, 248, 0.82); }
+
+@media (max-width: 900px) {
+    .navbar { padding-right: 16px; padding-left: 16px; }
+}
+
+@media (max-width: 560px) {
+    .main { padding: 12px; }
+    .overview-hero,
+    .methods-hero,
+    .region-hero,
+    .ai-hero,
+    .actions-hero { padding: 22px 18px; }
 }
