@@ -845,6 +845,13 @@ select,
 .methods-table th,
 th { background: rgba(237, 246, 248, 0.82); }
 
+/* Dataset paths and identifiers are interface labels, not source code. */
+code {
+    font-family: inherit;
+    font-size: 0.95em;
+    font-variant-numeric: tabular-nums;
+}
+
 @media (max-width: 900px) {
     .navbar { padding-right: 16px; padding-left: 16px; }
 }
