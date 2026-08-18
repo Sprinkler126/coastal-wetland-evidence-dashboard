@@ -1,0 +1,5 @@
+# Evidence artifacts are hash-verified in the published data manifest.
+# Preserve their exact bytes across Windows and Linux checkouts.
+web/web/data/*.json -text
+web/web/data/*.csv -text
+evidence/data/** -text
