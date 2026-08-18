@@ -1,0 +1,395 @@
+{
+  "contract_id": "coastal-wetland-evidence-contract",
+  "contract_version": "1.0.0",
+  "frozen_at": "2026-08-14",
+  "authoritative_input": {
+    "path": "evidence/data/authoritative/wetland_panel.xlsx",
+    "sheet": "master_panel_v2_clean",
+    "sha256": "a4cf9efdecf6735f87d398acc56604e66df26e62f1a2f1e96fafd7791aa3bcc6",
+    "data_rows": 1166,
+    "columns": 33,
+    "year_range": [
+      2001,
+      2022
+    ],
+    "spatial_units": 53,
+    "unique_key": [
+      "Year",
+      "City"
+    ],
+    "duplicate_keys": 0
+  },
+  "dimensions": {
+    "wetlands": [
+      {
+        "code": "Mangrove",
+        "label": "红树林"
+      },
+      {
+        "code": "Tidal_Flat",
+        "label": "潮滩"
+      },
+      {
+        "code": "Salt_Marsh",
+        "label": "盐沼"
+      },
+      {
+        "code": "Marsh",
+        "label": "沼泽"
+      }
+    ],
+    "drivers": [
+      {
+        "code": "Temp_Mean_C",
+        "label": "平均气温",
+        "group": "Climate"
+      },
+      {
+        "code": "Precip_Sum_mm",
+        "label": "降水量",
+        "group": "Climate"
+      },
+      {
+        "code": "Evap_Sum_mm",
+        "label": "蒸发量",
+        "group": "Climate"
+      },
+      {
+        "code": "MODIS_Urban_Area_sqkm",
+        "label": "城市面积",
+        "group": "Urbanization"
+      },
+      {
+        "code": "Impervious_sqkm",
+        "label": "不透水面面积",
+        "group": "Urbanization"
+      },
+      {
+        "code": "Unified_NTL_Index",
+        "label": "夜间灯光",
+        "group": "Urbanization"
+      },
+      {
+        "code": "GDP_per_capita",
+        "label": "人均 GDP",
+        "group": "Economy"
+      },
+      {
+        "code": "Secondary_GDP_Share",
+        "label": "第二产业占比",
+        "group": "Economy"
+      },
+      {
+        "code": "Total_Population",
+        "label": "总人口",
+        "group": "Population"
+      },
+      {
+        "code": "Pop_Density",
+        "label": "人口密度",
+        "group": "Population"
+      },
+      {
+        "code": "Cropland_sqkm",
+        "label": "耕地面积",
+        "group": "Agriculture"
+      }
+    ]
+  },
+  "data_dictionary": {
+    "identifier_fields": [
+      "Year",
+      "City",
+      "Cluster"
+    ],
+    "wetland_fields": [
+      "Permanent_Water",
+      "Swamp",
+      "Marsh",
+      "Flooded_Flat",
+      "Mangrove",
+      "Salt_Marsh",
+      "Tidal_Flat",
+      "Water_sqkm"
+    ],
+    "climate_fields": [
+      "Temp_Mean_C",
+      "Precip_Sum_mm",
+      "Evap_Sum_mm",
+      "Max_Monthly_Precip_mm",
+      "Hottest_Month_Temp_C",
+      "Coldest_Month_Temp_C"
+    ],
+    "human_pressure_fields": [
+      "MODIS_Urban_Area_sqkm",
+      "Unified_NTL_Index",
+      "Total_Population",
+      "Pop_Density",
+      "Cropland_sqkm",
+      "Impervious_sqkm",
+      "GDP_per_capita",
+      "Secondary_GDP_Share",
+      "SLA_mm_annual"
+    ],
+    "derived_fields": [
+      "asinh_Permanent_Water",
+      "asinh_Swamp",
+      "asinh_Marsh",
+      "asinh_Flooded_Flat",
+      "asinh_Mangrove",
+      "asinh_Salt_Marsh",
+      "asinh_Tidal_Flat"
+    ],
+    "notes": [
+      "面积字段以原始 Excel 的字段名和单位为准",
+      "asinh_* 是模型变换字段，不是原始面积",
+      "Hainan_Sheng 是省级汇总空间单元"
+    ]
+  },
+  "clusters": [
+    {
+      "code": "BBG",
+      "label": "北部湾城市群",
+      "english_label": "Beibu Gulf",
+      "role": "南方生态类型对照",
+      "members_count": 7,
+      "members": [
+        "Beihai",
+        "Fangchenggang",
+        "Hainan_Sheng",
+        "Maoming",
+        "Qinzhou",
+        "Yangjiang",
+        "Zhanjiang"
+      ]
+    },
+    {
+      "code": "BYS",
+      "label": "环渤海城市群",
+      "english_label": "Bohai Sea",
+      "role": "主案例下钻（演示选择，不是最高风险判定）",
+      "members_count": 17,
+      "members": [
+        "Binzhou",
+        "Cangzhou",
+        "Dalian",
+        "Dandong",
+        "Dongying",
+        "Huludao",
+        "Jinzhou",
+        "Panjin",
+        "Qingdao",
+        "Qinhuangdao",
+        "Rizhao",
+        "Tangshan",
+        "Tianjin_Shi",
+        "Weifang",
+        "Weihai",
+        "Yantai",
+        "Yingkou"
+      ]
+    },
+    {
+      "code": "HX",
+      "label": "海峡西岸城市群",
+      "english_label": "West Coast of Taiwan Strait",
+      "role": "人口压力过渡案例",
+      "members_count": 9,
+      "members": [
+        "Chaozhou",
+        "Fuzhou",
+        "Jieyang",
+        "Ningde",
+        "Putian",
+        "Quanzhou",
+        "Shantou",
+        "Xiamen",
+        "Zhangzhou"
+      ]
+    },
+    {
+      "code": "PRD",
+      "label": "珠三角城市群",
+      "english_label": "Pearl River Delta",
+      "role": "高城镇化脱钩专题",
+      "members_count": 9,
+      "members": [
+        "Dongguan",
+        "Guangzhou",
+        "Hong_Kong",
+        "Huizhou",
+        "Jiangmen",
+        "Shanwei",
+        "Shenzhen",
+        "Zhongshan",
+        "Zhuhai"
+      ]
+    },
+    {
+      "code": "YRD",
+      "label": "长三角城市群",
+      "english_label": "Yangtze River Delta",
+      "role": "潮滩与盐城增长备选对照",
+      "members_count": 11,
+      "members": [
+        "Hangzhou",
+        "Jiaxing",
+        "Lianyungang",
+        "Nantong",
+        "Ningbo",
+        "Shanghai_Shi",
+        "Shaoxing",
+        "Taizhou",
+        "Wenzhou",
+        "Yancheng",
+        "Zhoushan"
+      ]
+    }
+  ],
+  "evidence_types": {
+    "FACT": {
+      "label": "事实",
+      "definition": "由权威面板确定性计算的结果",
+      "allowed": "报告时期、尺度、数值和计算规则",
+      "not_allowed": "未经数据支持的机制或因果解释"
+    },
+    "ASSOCIATION": {
+      "label": "统计关联",
+      "definition": "控制城市和年份固定效应后的统计关联方向及不确定性",
+      "allowed": "关联方向、p 值、置信区间和稳健性",
+      "not_allowed": "确定因果或政策效果"
+    },
+    "MODEL_ATTRIBUTION": {
+      "label": "模型归因",
+      "definition": "变量在拟合模型中的预测贡献或归因",
+      "allowed": "模型贡献、SHAP、预测贡献",
+      "not_allowed": "因果影响或生态机制已被证明"
+    },
+    "EXPLORATORY": {
+      "label": "探索性解释",
+      "definition": "基于现有证据提出、仍需核查的解释或假设",
+      "allowed": "复核假设和补充数据建议",
+      "not_allowed": "把假设写成事实"
+    },
+    "INSUFFICIENT": {
+      "label": "Insufficient data",
+      "definition": "模型失败、不稳定诊断或资料限制导致只能提示复核的内部证据状态",
+      "allowed": "明确限制、复核需求和补充资料建议",
+      "not_allowed": "未来风险概率、低风险、无风险或自动审批"
+    }
+  },
+  "wording_guardrails": {
+    "allowed": [
+      "控制城市和年份固定效应后的统计关联方向",
+      "观测期内拟合",
+      "同期湿地面积结构拟合",
+      "模型归因",
+      "模型贡献",
+      "在该模型中的预测贡献",
+      "在观测范围内的模型响应关系",
+      "建议优先核查",
+      "探索性建议",
+      "待补充数据验证"
+    ],
+    "forbidden": [
+      "预测未来",
+      "准确率证明",
+      "将导致",
+      "因果影响",
+      "政策效果为",
+      "生态机制已被证明",
+      "风险概率",
+      "自动判定最高风险",
+      "自动审批",
+      "自动执法"
+    ],
+    "semantic_rules": [
+      "综合证据矩阵分类是筛查/复核类别，不是未来风险概率",
+      "Insufficient data 和 Decoupling 单元需要结合微观资料与人工复核解释",
+      "BYS 是演示案例选择，不是模型最高风险区域",
+      "面积增长不等于修复成功",
+      "网页不自行计算或补齐关键数字，数字必须来自结构化输入",
+      "严格未来变化预测验证为 FAIL，不输出未来风险概率"
+    ]
+  },
+  "product_journeys": [
+    {
+      "id": "journey-bys",
+      "name": "环渤海主案例",
+      "steps": [
+        "五群总览",
+        "选择 BYS",
+        "选择空间单元和湿地",
+        "查看综合证据矩阵分类与支撑等级",
+        "查看历史趋势和证据卡",
+        "进入空间单元下钻",
+        "切换北部湾进行同指标对照"
+      ],
+      "must_not_claim": [
+        "BYS 是最高风险区域",
+        "SHAP 是因果",
+        "输出未来风险概率"
+      ]
+    },
+    {
+      "id": "journey-bbg",
+      "name": "北部湾生态对照",
+      "steps": [
+        "从同一证据卡切换 BBG",
+        "比较同湿地、同时期和同尺度证据",
+        "核对分类与证据支撑等级",
+        "比较历史趋势与样本覆盖",
+        "解释生态背景差异",
+        "明确面积增长不等于修复成功"
+      ],
+      "must_not_claim": [
+        "面积增长自动证明修复成功",
+        "全国阈值可直接套用"
+      ]
+    }
+  ],
+  "page_scope": {
+    "in_scope": [
+      "五群总览",
+      "数据采集与方法",
+      "模型特征重要性",
+      "SHAP 依赖关系",
+      "局部效应",
+      "城市异质性",
+      "区域下钻",
+      "证据卡",
+      "数据质量与适用性"
+    ],
+    "deferred": [
+      "专家复核持久化",
+      "监测任务持久化",
+      "多受众简报生成",
+      "Markdown/PDF/CSV 导出实现",
+      "审计日志持久化",
+      "认证和角色管理"
+    ],
+    "out_of_scope": [
+      "像元级遥感变化识别",
+      "项目或污染源自动归因",
+      "未来风险概率预测",
+      "AI 自动解释与行动简报",
+      "自动审批或执法"
+    ]
+  },
+  "acceptance": {
+    "risk_matrix_cells": 20,
+    "screening_category_counts": {
+      "High": 7,
+      "Medium": 9,
+      "Decoupling": 1,
+      "Insufficient": 3
+    },
+    "bys_is_demo_selection": true
+  },
+  "screening_matrix": {
+    "path": "evidence/data/screening_matrix/supporting_evidence.csv",
+    "description": "Wetland-cluster evidence synthesis matrix with TWFE, SHAP, partial-effect, GMM, sample-size, support-grade, and evidence-note fields",
+    "category_field": "Figure14_Category",
+    "display_rule": "Frontend maps raw categories to screening/review labels and must explain that categories are not future-risk probabilities."
+  }
+}

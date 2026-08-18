@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "release_id": "beta-2026-08-18",
-  "bundle_id": "ea23ff505c95511a99f5208771ce410e283a27cb90d571c5a4e68123a0b46002",
+  "bundle_id": "1e8f0477cf746d9928a1889c820baf43f46fd476ebf07edb03696457934ba0f3",
   "period": "2001-2022",
   "dimensions": {
     "wetlands": [
@@ -101,8 +101,18 @@
         "overview",
         "region"
       ],
-      "sha256": "a2580d36b5b2631cae2ec2b9160df1312b4ca27cb69069fe63611d7710bb8a65",
-      "size_bytes": 1713404
+      "sha256": "5b3112b882b3290448abdebaa6485aef5c7a60381627e0ae85c4d87ed70c2ca2",
+      "size_bytes": 1706142
+    },
+    "screeningEvidence": {
+      "file": "screening_evidence.csv",
+      "format": "csv",
+      "schema_version": "screening-evidence-1.0.0",
+      "required_by": [
+        "methods"
+      ],
+      "sha256": "e5b8eee1477f6f2a425b99e8a810c08389c28cff1ec2e5ac7186366964d0c804",
+      "size_bytes": 16291
     }
   }
 }

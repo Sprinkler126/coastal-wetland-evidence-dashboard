@@ -197,7 +197,12 @@ function initChart(domId) {
         return null;
     }
     try {
-        const existingChart = window.echarts.getInstanceByDom(dom);
+        let existingChart = window.echarts.getInstanceByDom(dom);
+        if (existingChart && !dom.querySelector('canvas, svg')) {
+            existingChart.dispose();
+            existingChart = null;
+            dom.innerHTML = '';
+        }
         if (existingChart) {
             existingChart.__domId = domId;
             return existingChart;
@@ -271,6 +276,15 @@ function numericAxis(name, digits, extra = {}) {
         axisLabel: { ...axisLabel, formatter: value => formatChartNumber(value, digits) },
         ...rest,
     };
+}
+
+function verticalNumericAxis(name, digits, extra = {}) {
+    return numericAxis(name, digits, {
+        nameLocation: 'middle',
+        nameGap: 56,
+        nameRotate: 90,
+        ...extra,
+    });
 }
 
 function heatVisualMap(min, max, digits, colors, rSquared = false, endpointKeys = null) {
@@ -622,9 +636,9 @@ function renderDependence(wetland, feature, cluster, mode) {
                 ].join('<br>'),
             },
             legend: { data: series.map(item => item.name), bottom: 0 },
-            grid: { left: 60, right: 30, top: 20, bottom: 50 },
+            grid: { left: 88, right: 30, top: 20, bottom: 50 },
             xAxis: numericAxis(featureLabel(feature), 2, { nameLocation: 'center', nameGap: 30 }),
-            yAxis: numericAxis(chartText('axes.shapValue'), 4),
+            yAxis: verticalNumericAxis(chartText('axes.shapValue'), 4),
             series,
         });
     } else {
@@ -641,9 +655,9 @@ function renderDependence(wetland, feature, cluster, mode) {
                     tooltipLine(chartText('metrics.shap'), formatChartNumber(p.value[1], 4)),
                 ].join('<br>'),
             },
-            grid: { left: 60, right: 30, top: 20, bottom: 50 },
+            grid: { left: 88, right: 30, top: 20, bottom: 50 },
             xAxis: numericAxis(featureLabel(feature), 2, { nameLocation: 'center', nameGap: 30 }),
-            yAxis: numericAxis(chartText('axes.shapValue'), 4),
+            yAxis: verticalNumericAxis(chartText('axes.shapValue'), 4),
             series: [{
                 type: 'scatter', data: scatterData, symbolSize: 7,
                 itemStyle: { color: '#007C83', opacity: 0.58 },
@@ -695,9 +709,9 @@ function renderPartialEffect(wetland, feature, cluster, mode) {
                 },
             },
             legend: { data: series.map(item => item.name), bottom: 0 },
-            grid: { left: 60, right: 30, top: 20, bottom: 50 },
+            grid: { left: 88, right: 30, top: 20, bottom: 50 },
             xAxis: numericAxis(featureLabel(feature), 2, { nameLocation: 'center', nameGap: 30 }),
-            yAxis: numericAxis(chartText('axes.predictedArea'), 2),
+            yAxis: verticalNumericAxis(chartText('axes.predictedArea'), 2),
             series,
         });
     } else {
@@ -717,9 +731,9 @@ function renderPartialEffect(wetland, feature, cluster, mode) {
                     ].join('<br>');
                 },
             },
-            grid: { left: 60, right: 30, top: 20, bottom: 50 },
+            grid: { left: 88, right: 30, top: 20, bottom: 50 },
             xAxis: numericAxis(featureLabel(feature), 2, { nameLocation: 'center', nameGap: 30 }),
-            yAxis: numericAxis(chartText('axes.predictedArea'), 2),
+            yAxis: verticalNumericAxis(chartText('axes.predictedArea'), 2),
             series: [{
                 type: 'line', data: curve.values.map((value, index) => [value, curve.pred_orig[index]]),
                 smooth: true, showSymbol: false, lineStyle: { width: 3, color: '#007C83' },

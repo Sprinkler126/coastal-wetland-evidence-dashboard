@@ -13,6 +13,7 @@
     <h1>🌊 <span data-i18n="app.name">湿地模型特征分析</span></h1>
     <div class="nav-tabs">
         <button class="nav-tab active" type="button" onclick="showPage('overview')" data-i18n="nav.overview">总览</button>
+        <button class="nav-tab" type="button" onclick="showPage('methods')" data-i18n="nav.methods">数据与方法</button>
         <button class="nav-tab" type="button" onclick="showPage('importance')" data-i18n="nav.importance">模型特征重要性</button>
         <button class="nav-tab" type="button" onclick="showPage('dependence')" data-i18n="nav.dependence">依赖关系</button>
         <button class="nav-tab" type="button" onclick="showPage('partial')" data-i18n="nav.partial">部分效应</button>
@@ -49,11 +50,11 @@
         <div class="stat-card"><div class="value" id="overview-wetlands-value">4</div><div class="label" data-i18n="overview.wetlands">重点湿地类型</div></div>
     </div>
 
-    <section class="notice notice-info"><strong data-i18n="overview.readingRule">读图口径：</strong><span data-i18n="overview.boundary">Figure 14 矩阵展示综合筛查/复核类别，历史变化导航展示观测期事实；这些类别不是未来风险概率。</span></section>
+    <section class="notice notice-info"><strong data-i18n="overview.readingRule">读图口径：</strong><span data-i18n="overview.boundary">综合证据矩阵展示湿地—城市群筛查/复核类别，历史变化视图展示观测期事实；这些类别不是未来风险概率。</span></section>
 
     <section class="overview-section">
         <div class="section-heading">
-            <div><p class="eyebrow" data-i18n="overview.navigation">五群导航</p><h3 data-i18n="overview.evidenceAndTrend">证据状态与历史变化</h3></div>
+            <div><p class="eyebrow" data-i18n="overview.navigation">五群导航</p><h3 data-i18n="overview.evidenceAndTrend">湿地—城市群综合证据矩阵</h3></div>
             <div class="segmented-control" role="tablist" aria-label="首页视图" data-i18n-aria-label="overview.viewLabel">
                 <button class="segment active" type="button" role="tab" aria-selected="true" onclick="setOverviewView('matrix', this)" data-i18n="overview.matrix">证据矩阵</button>
                 <button class="segment" type="button" role="tab" aria-selected="false" onclick="setOverviewView('trend', this)" data-i18n="overview.trend">历史变化</button>
@@ -61,9 +62,8 @@
         </div>
         <div id="overview-matrix-view">
             <div class="matrix-toolbar">
-                <label for="overview-wetland" data-i18n="overview.wetlandType">湿地类型</label>
-                <select id="overview-wetland" onchange="renderOverviewMatrix()" data-i18n-aria-label="overview.wetlandType"></select>
-                <span class="matrix-legend"><span class="status-dot status-high"></span><span data-i18n="overview.legendHigh">Figure 14 高类别</span><span class="status-dot status-medium"></span><span data-i18n="overview.legendMedium">Figure 14 中类别</span><span class="status-dot status-decoupling"></span><span data-i18n="overview.legendDecoupling">Figure 14 脱钩类别</span><span class="status-dot status-insufficient-data"></span><span data-i18n="overview.legendInsufficient">数据不足</span></span>
+                <span class="muted" data-i18n="overview.matrixMeta">4 类湿地 × 5 个城市群；点击任一单元查看支撑证据</span>
+                <span class="matrix-legend"><span class="status-dot status-high"></span><span data-i18n="overview.legendHigh">高优先级复核</span><span class="status-dot status-medium"></span><span data-i18n="overview.legendMedium">中等优先级复核</span><span class="status-dot status-decoupling"></span><span data-i18n="overview.legendDecoupling">脱钩型复核</span><span class="status-dot status-insufficient-data"></span><span data-i18n="overview.legendInsufficient">数据不足</span></span>
             </div>
             <div id="evidence-matrix" class="evidence-matrix" aria-live="polite"></div>
         </div>
@@ -81,7 +81,7 @@
         <div class="section-heading"><div><p class="eyebrow" data-i18n="overview.caseEntry">案例入口</p><h3 data-i18n="overview.whyBys">为什么先看环渤海？</h3></div></div>
         <div class="recommendation-strip">
             <div><strong><span data-i18n="cluster.BYS">环渤海</span> (BYS)</strong><span data-i18n="overview.mainCase">主案例下钻 · 演示案例选择</span></div>
-            <p data-i18n="overview.caseDescription">综合样本规模、变化故事、公共议题和演示结构选择；不是风险矩阵自动选出的最高风险区域。Day 6 加入北部湾（BBG）作为同指标同尺度生态对照。</p>
+            <p data-i18n="overview.caseDescription">综合样本规模、变化故事、公共议题和演示结构选择；不是筛查矩阵自动选出的最高优先级区域。北部湾（BBG）作为同指标同尺度的南方生态对照。</p>
             <button class="secondary-action" type="button" onclick="openRegionPage('BYS')" data-i18n="overview.openRegion">进入区域下钻</button>
             <button class="secondary-action" type="button" onclick="openRegionPage('BBG')" data-i18n="overview.openBbg">查看北部湾对照</button>
             <button class="text-action" type="button" onclick="openRecommendationDrawer()" data-i18n="overview.recommendation">查看理由</button>
@@ -101,15 +101,151 @@
     </div>
 </div>
 
+<div id="page-methods" class="page">
+    <section class="methods-hero">
+        <div>
+            <p class="eyebrow" data-i18n="methods.eyebrow">从遥感采集到证据产品</p>
+            <h2 data-i18n="methods.title">这项工作如何把多源数据变成可核查的湿地证据</h2>
+            <p class="hero-copy" data-i18n="methods.copy">项目以 Google Earth Engine 为主要采集环境，将年度湿地、气候、人口与城市化数据统一到五大沿海城市群的空间单元—年份面板，再完成质量检查、趋势分析、模型解释和证据发布。</p>
+        </div>
+        <div class="methods-hero-meta" aria-label="项目范围" data-i18n-aria-label="methods.scopeLabel">
+            <span>2001–2022</span><span data-i18n="methods.scopeClusters">5 个城市群</span><span data-i18n="methods.scopeUnits">53 个空间单元</span>
+        </div>
+    </section>
+
+    <section class="methods-section" aria-labelledby="methods-overview-title">
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="methods.overviewEyebrow">工作全景</p><h3 id="methods-overview-title" data-i18n="methods.overviewTitle">一条从像元到网页证据的完整链路</h3></div></div>
+        <p class="methods-lead" data-i18n="methods.overviewCopy">采集层保留 8 类湿地及多组环境和社会经济变量；分析层形成 1,166 条空间单元—年份观测；产品层聚焦红树林、潮滩、盐沼和沼泽 4 类重点湿地，并把历史事实、统计关联、模型归因和证据不足明确区分。</p>
+        <div class="methods-stat-grid">
+            <article><strong>22</strong><span data-i18n="methods.statYears">连续年份</span></article>
+            <article><strong>1,166</strong><span data-i18n="methods.statObservations">空间单元—年份观测</span></article>
+            <article><strong>8 → 4</strong><span data-i18n="methods.statWetlands">采集湿地类别 → 产品重点类别</span></article>
+            <article><strong>11</strong><span data-i18n="methods.statDrivers">进入模型的驱动变量</span></article>
+        </div>
+    </section>
+
+    <section class="methods-section" aria-labelledby="methods-sources-title">
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="methods.sourcesEyebrow">数据来源</p><h3 id="methods-sources-title" data-i18n="methods.sourcesTitle">采集脚本中可直接追溯的六类数据</h3></div><span class="muted" data-i18n="methods.sourcesMeta">数据集 ID、处理尺度和派生字段均来自当前 GEE 脚本</span></div>
+        <div class="source-grid">
+            <article class="source-card">
+                <span class="source-kind" data-i18n="methods.sourceBoundaryKind">空间边界</span>
+                <h4>FAO GAUL 2015</h4>
+                <code>FAO/GAUL/2015/level0–2</code>
+                <p data-i18n="methods.sourceBoundaryCopy">用国家、省级和地市级行政单元组装珠三角、长三角、海峡西岸、北部湾和环渤黄海研究区，并统一空间单元名称。</p>
+                <dl><div><dt data-i18n="methods.fieldRole">产出作用</dt><dd data-i18n="methods.sourceBoundaryRole">裁剪、分区汇总与城市群归属</dd></div></dl>
+            </article>
+            <article class="source-card">
+                <span class="source-kind" data-i18n="methods.sourceWetlandKind">湿地分类</span>
+                <h4>GWL_FCS30</h4>
+                <code>projects/sat-io/open-datasets/GWL_FCS30</code>
+                <p data-i18n="methods.sourceWetlandCopy">逐年读取湿地分类影像，将 180–187 类码重映射为永久水体、沼泽、草本沼泽、洪泛滩、盐碱地、红树林、盐沼和潮滩，并按像元面积汇总。</p>
+                <dl><div><dt data-i18n="methods.fieldScale">处理尺度</dt><dd data-i18n="methods.sourceWetlandScale">100 m 汇总，面积单位 km²</dd></div></dl>
+            </article>
+            <article class="source-card">
+                <span class="source-kind" data-i18n="methods.sourceClimateKind">气候</span>
+                <h4>ERA5-Land Monthly Aggregated</h4>
+                <code>ECMWF/ERA5_LAND/MONTHLY_AGGR</code>
+                <p data-i18n="methods.sourceClimateCopy">计算年平均气温、年降水量、年蒸发量，并保留最大月降水、最热月均温和最冷月均温等极端气候代理指标。</p>
+                <dl><div><dt data-i18n="methods.fieldScale">处理尺度</dt><dd data-i18n="methods.sourceClimateScale">约 11,132 m，空间均值</dd></div></dl>
+            </article>
+            <article class="source-card">
+                <span class="source-kind" data-i18n="methods.sourcePopulationKind">人口</span>
+                <h4>WorldPop Global Project Population</h4>
+                <code>WorldPop/GP/100m/pop</code>
+                <p data-i18n="methods.sourcePopulationCopy">按年拼接人口栅格并统计总人口，再以行政单元面积计算人口密度。mosaic 处理避免空切片造成的重命名错误。</p>
+                <dl><div><dt data-i18n="methods.fieldScale">处理尺度</dt><dd data-i18n="methods.sourcePopulationScale">100 m，总量与人/km²</dd></div></dl>
+            </article>
+            <article class="source-card">
+                <span class="source-kind" data-i18n="methods.sourceUrbanKind">建成区</span>
+                <h4>MODIS MCD12Q1 v061</h4>
+                <code>MODIS/061/MCD12Q1 · LC_Type1 = 13</code>
+                <p data-i18n="methods.sourceUrbanCopy">使用 IGBP 土地覆盖分类中的建成区类别，按年度计算每个空间单元的 MODIS 建成区面积。</p>
+                <dl><div><dt data-i18n="methods.fieldScale">处理尺度</dt><dd data-i18n="methods.sourceUrbanScale">500 m 汇总，面积单位 km²</dd></div></dl>
+            </article>
+            <article class="source-card">
+                <span class="source-kind" data-i18n="methods.sourceNtlKind">夜间灯光</span>
+                <h4>DMSP-OLS + VIIRS DNB</h4>
+                <code>NOAA/DMSP-OLS · NOAA/VIIRS/DNB</code>
+                <p data-i18n="methods.sourceNtlCopy">2001–2013 年使用 DMSP stable_lights；2014–2021 年使用 VIIRS 年度 average；2022 年使用 VIIRS 月度 avg_rad 均值，并通过脚本中的跨传感器公式形成统一指数。</p>
+                <dl><div><dt data-i18n="methods.fieldScale">处理尺度</dt><dd data-i18n="methods.sourceNtlScale">500 m，空间均值</dd></div></dl>
+            </article>
+        </div>
+    </section>
+
+    <section class="methods-section" aria-labelledby="methods-flow-title">
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="methods.flowEyebrow">处理流程</p><h3 id="methods-flow-title" data-i18n="methods.flowTitle">六步形成可复核的分析产品</h3></div></div>
+        <ol class="workflow-grid">
+            <li><span>01</span><div><strong data-i18n="methods.flow1Title">定义空间范围</strong><p data-i18n="methods.flow1Copy">用 GAUL 多级行政边界构建五大沿海城市群与 53 个空间单元。</p></div></li>
+            <li><span>02</span><div><strong data-i18n="methods.flow2Title">逐年并行提取</strong><p data-i18n="methods.flow2Copy">在同一年度和空间单元上汇总湿地面积、气候、人口、建成区和夜灯指标。</p></div></li>
+            <li><span>03</span><div><strong data-i18n="methods.flow3Title">统一字段与单位</strong><p data-i18n="methods.flow3Copy">将面积统一为 km²、温度转为 ℃、水量转为 mm，并协调跨传感器夜灯序列。</p></div></li>
+            <li><span>04</span><div><strong data-i18n="methods.flow4Title">组装主面板</strong><p data-i18n="methods.flow4Copy">合并为 2001–2022 年的空间单元—年份面板，并加入经济、不透水面和耕地等分析字段。</p></div></li>
+            <li><span>05</span><div><strong data-i18n="methods.flow5Title">质量检查与建模</strong><p data-i18n="methods.flow5Copy">生成质量标记、单元与城市群趋势，训练区域模型并计算 SHAP、依赖关系和部分效应。</p></div></li>
+            <li><span>06</span><div><strong data-i18n="methods.flow6Title">发布证据产品</strong><p data-i18n="methods.flow6Copy">把结果写入 evidence bundle 和模型 JSON，以 manifest 记录版本、文件大小、SHA-256 与页面用途。</p></div></li>
+        </ol>
+    </section>
+
+    <section class="methods-section figure14-explainer" aria-labelledby="methods-figure14-title">
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="methods.figure14Eyebrow">综合筛查证据</p><h3 id="methods-figure14-title" data-i18n="methods.figure14Title">综合证据矩阵如何组织 20 个筛查单元</h3></div><span class="muted" data-i18n="methods.figure14Meta">4 类湿地 × 5 个城市群 · 分类与支撑等级分开</span></div>
+        <p class="methods-lead" data-i18n="methods.figure14Lead">湿地—城市群综合证据矩阵源于论文中的筛查图，但不是由一个风险公式直接输出的概率模型。网页把每个单元的来源分类与历史趋势、TWFE、SHAP、局部效应、GMM 和样本量并列展示，帮助读者判断证据链强弱。</p>
+        <div class="figure14-method-grid">
+            <article><span>01</span><strong data-i18n="methods.figure14CategoryTitle">保留来源分类</strong><p data-i18n="methods.figure14CategoryCopy">High、Medium、Decoupling、Insufficient 来自论文来源图，只表示筛查/复核类别；不是本网页重新计算出的风险等级。</p></article>
+            <article><span>02</span><strong data-i18n="methods.figure14EvidenceTitle">逐格汇集模型证据</strong><p data-i18n="methods.figure14EvidenceCopy">每个湿地—城市群格子整理显著负向 TWFE、SHAP Top 3、局部效应弹性 Top 3、GMM 滞后状态和样本量。</p></article>
+            <article><span>03</span><strong data-i18n="methods.figure14GradeTitle">单独评估支撑强度</strong><p data-i18n="methods.figure14GradeCopy">证据支撑等级只回答现有定量证据是否相互印证，不改变原分类，也不生成未来风险概率。</p></article>
+        </div>
+        <div class="figure14-formula">
+            <div><span class="source-kind" data-i18n="methods.figure14FormulaLabel">支撑等级公式</span><strong>E = T + S + G</strong><p data-i18n="methods.figure14FormulaBoundary">这是证据交叉支撑计数，不是风险分数。</p></div>
+            <dl>
+                <div><dt>T</dt><dd data-i18n="methods.figure14FormulaT">存在至少一个 p &lt; 0.10 的负向区域 TWFE 关联</dd></div>
+                <div><dt>S</dt><dd data-i18n="methods.figure14FormulaS">负向 TWFE 变量组与 SHAP Top 3 变量组有重合</dd></div>
+                <div><dt>G</dt><dd data-i18n="methods.figure14FormulaG">湿地层面 GMM 滞后项显著为正</dd></div>
+            </dl>
+        </div>
+        <div class="support-grade-grid">
+            <div class="support-grade grade-strong"><strong>2</strong><span data-i18n="methods.figure14Strong">强多源支撑</span></div>
+            <div class="support-grade grade-moderate"><strong>4</strong><span data-i18n="methods.figure14Moderate">中等支撑</span></div>
+            <div class="support-grade grade-weak"><strong>10</strong><span data-i18n="methods.figure14Weak">弱直接定量支撑</span></div>
+            <div class="support-grade grade-caution"><strong>4</strong><span data-i18n="methods.figure14Caution">审慎/解释型</span></div>
+        </div>
+        <p class="figure14-caution" data-i18n="methods.figure14CautionCopy">“弱直接定量支撑”表示当前证据链较弱，不等于低优先级；Insufficient 和 Decoupling 也必须结合更细尺度资料和人工复核。</p>
+        <div class="methods-data-actions"><a class="secondary-action" href="data/screening_evidence.csv" download data-i18n="methods.figure14Download">下载 20 格支撑证据 CSV</a><span data-i18n="methods.figure14DownloadMeta">包含分类、样本量、TWFE、SHAP、局部效应、GMM、支撑等级与逐格说明</span></div>
+    </section>
+
+    <section class="methods-section" aria-labelledby="methods-output-title">
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="methods.outputEyebrow">成果结构</p><h3 id="methods-output-title" data-i18n="methods.outputTitle">从采集表到交互网页的四层产出</h3></div></div>
+        <div class="table-container methods-table-wrap">
+            <table class="methods-table">
+                <thead><tr><th data-i18n="methods.outputLayer">层级</th><th data-i18n="methods.outputArtifact">代表产物</th><th data-i18n="methods.outputPurpose">作用</th><th data-i18n="methods.outputTrace">可追溯性</th></tr></thead>
+                <tbody>
+                    <tr><td data-i18n="methods.outputCollection">采集层</td><td>GEE CSV exports</td><td data-i18n="methods.outputCollectionPurpose">保存逐年、逐空间单元的湿地与驱动变量</td><td data-i18n="methods.outputCollectionTrace">脚本保留数据集 ID、字段和处理尺度</td></tr>
+                    <tr><td data-i18n="methods.outputPanel">面板层</td><td><code>evidence/data/authoritative/wetland_panel.xlsx</code></td><td data-i18n="methods.outputPanelPurpose">形成 1,166 条统一分析观测</td><td data-i18n="methods.outputPanelTrace">证据包记录文件 SHA-256</td></tr>
+                    <tr><td data-i18n="methods.outputAnalysis">分析层</td><td><code>evidence/data/historical · figure14 · model</code></td><td data-i18n="methods.outputAnalysisPurpose">承载趋势、质量诊断和模型解释结果</td><td data-i18n="methods.outputAnalysisTrace">保留派生文件路径与哈希</td></tr>
+                    <tr><td data-i18n="methods.outputProduct">产品层</td><td><code>evidence_bundle.json · manifest.json</code></td><td data-i18n="methods.outputProductPurpose">驱动总览、模型页面与区域下钻</td><td data-i18n="methods.outputProductTrace">bundle_id、版本、大小和 SHA-256 可校验</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="methods-section" aria-labelledby="methods-boundary-title">
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="methods.boundaryEyebrow">质量与边界</p><h3 id="methods-boundary-title" data-i18n="methods.boundaryTitle">解释结果前必须保留的四项说明</h3></div></div>
+        <div class="boundary-grid">
+            <article><strong data-i18n="methods.boundaryPopulationTitle">人口年份替代</strong><p data-i18n="methods.boundaryPopulationCopy">当前 WorldPop 脚本将 2021 和 2022 年映射到 2020 年影像；这些年份不是独立人口观测。</p></article>
+            <article><strong data-i18n="methods.boundaryScaleTitle">多尺度汇总</strong><p data-i18n="methods.boundaryScaleCopy">湿地与人口按 100 m、建成区与夜灯按 500 m、气候按约 11 km 统计，变量不能被解释为同一原始分辨率。</p></article>
+            <article><strong data-i18n="methods.boundarySpatialTitle">行政单元不是生态边界</strong><p data-i18n="methods.boundarySpatialCopy">GAUL 边界用于一致汇总和比较，不等同于流域、潮间带或生态过程边界。</p></article>
+            <article><strong data-i18n="methods.boundaryInferenceTitle">历史与模型边界</strong><p data-i18n="methods.boundaryInferenceCopy">趋势是历史描述，SHAP 是模型归因；两者都不自动证明因果关系，也不构成未来风险概率。</p></article>
+        </div>
+        <div class="notice notice-info methods-provenance-note"><strong data-i18n="methods.provenanceTitle">待补充来源记录：</strong><span data-i18n="methods.provenanceCopy">不透水面面积、人均 GDP、第二产业占比和耕地面积已经进入主面板与模型，但当前 beta 仓库没有随采集脚本保存其原始数据集 ID、版本和处理方法。本页因此只陈述其分析用途，不推测来源；正式发布前应补齐这四项来源溯源记录。</span></div>
+    </section>
+</div>
+
 <div id="page-region" class="page">
     <section class="region-hero">
         <div><p class="eyebrow" data-i18n="region.eyebrow">区域下钻 · 历史筛查</p><h2 id="region-title">环渤海空间单元</h2><p id="region-role">主案例下钻 · 17 个空间单元</p></div>
         <button class="secondary-action" type="button" onclick="showPage('overview')" data-i18n="region.backOverview">返回五群总览</button>
     </section>
     <section class="notice notice-info"><strong data-i18n="region.readingRuleLabel">区域口径：</strong><span data-i18n="region.rule">以下排序、变化量和热图只描述 2001–2022 年空间单元历史事实，不是风险等级、未来预测或因果判断。</span></section>
-    <section class="day6-comparison" aria-labelledby="day6-comparison-title">
+    <section class="region-comparison" aria-labelledby="region-comparison-title">
         <div class="section-heading">
-            <div><p class="eyebrow" data-i18n="region.comparisonEyebrow">Day 6 · 北部湾对照</p><h3 id="day6-comparison-title" data-i18n="region.comparisonTitle">同指标同尺度比较</h3></div>
+            <div><p class="eyebrow" data-i18n="region.comparisonEyebrow">北部湾生态对照</p><h3 id="region-comparison-title" data-i18n="region.comparisonTitle">同指标同尺度比较</h3></div>
             <span class="muted" data-i18n="region.comparisonMeta">BYS vs BBG · 2001–2022 · 城市群尺度</span>
         </div>
         <div id="region-comparison" aria-live="polite"></div>

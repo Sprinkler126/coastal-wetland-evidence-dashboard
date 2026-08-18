@@ -1,0 +1,502 @@
+{
+  "schema_version": "1.0.0",
+  "contract_id": "coastal-wetland-evidence-contract",
+  "contract_version": "1.0.0",
+  "source_sha256": "a4cf9efdecf6735f87d398acc56604e66df26e62f1a2f1e96fafd7791aa3bcc6",
+  "rows": 1166,
+  "columns": 33,
+  "period": "2001-2022",
+  "years": [
+    2001,
+    2022
+  ],
+  "spatial_units": 53,
+  "clusters": {
+    "BBG": 7,
+    "BYS": 17,
+    "HX": 9,
+    "PRD": 9,
+    "YRD": 11
+  },
+  "duplicate_year_city_keys": 0,
+  "enumerations": {
+    "years": [
+      2001,
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022
+    ],
+    "wetlands": [
+      "Mangrove",
+      "Tidal_Flat",
+      "Salt_Marsh",
+      "Marsh"
+    ],
+    "clusters": [
+      {
+        "code": "BBG",
+        "label": "北部湾城市群",
+        "english_label": "Beibu Gulf",
+        "role": "南方生态类型对照",
+        "members_count": 7,
+        "members": [
+          "Beihai",
+          "Fangchenggang",
+          "Hainan_Sheng",
+          "Maoming",
+          "Qinzhou",
+          "Yangjiang",
+          "Zhanjiang"
+        ]
+      },
+      {
+        "code": "BYS",
+        "label": "环渤海城市群",
+        "english_label": "Bohai Sea",
+        "role": "主案例下钻（演示选择，不是最高风险判定）",
+        "members_count": 17,
+        "members": [
+          "Binzhou",
+          "Cangzhou",
+          "Dalian",
+          "Dandong",
+          "Dongying",
+          "Huludao",
+          "Jinzhou",
+          "Panjin",
+          "Qingdao",
+          "Qinhuangdao",
+          "Rizhao",
+          "Tangshan",
+          "Tianjin_Shi",
+          "Weifang",
+          "Weihai",
+          "Yantai",
+          "Yingkou"
+        ]
+      },
+      {
+        "code": "HX",
+        "label": "海峡西岸城市群",
+        "english_label": "West Coast of Taiwan Strait",
+        "role": "人口压力过渡案例",
+        "members_count": 9,
+        "members": [
+          "Chaozhou",
+          "Fuzhou",
+          "Jieyang",
+          "Ningde",
+          "Putian",
+          "Quanzhou",
+          "Shantou",
+          "Xiamen",
+          "Zhangzhou"
+        ]
+      },
+      {
+        "code": "PRD",
+        "label": "珠三角城市群",
+        "english_label": "Pearl River Delta",
+        "role": "高城镇化脱钩专题",
+        "members_count": 9,
+        "members": [
+          "Dongguan",
+          "Guangzhou",
+          "Hong_Kong",
+          "Huizhou",
+          "Jiangmen",
+          "Shanwei",
+          "Shenzhen",
+          "Zhongshan",
+          "Zhuhai"
+        ]
+      },
+      {
+        "code": "YRD",
+        "label": "长三角城市群",
+        "english_label": "Yangtze River Delta",
+        "role": "潮滩与盐城增长备选对照",
+        "members_count": 11,
+        "members": [
+          "Hangzhou",
+          "Jiaxing",
+          "Lianyungang",
+          "Nantong",
+          "Ningbo",
+          "Shanghai_Shi",
+          "Shaoxing",
+          "Taizhou",
+          "Wenzhou",
+          "Yancheng",
+          "Zhoushan"
+        ]
+      }
+    ],
+    "units": [
+      {
+        "city": "Beihai",
+        "cluster": "BBG"
+      },
+      {
+        "city": "Fangchenggang",
+        "cluster": "BBG"
+      },
+      {
+        "city": "Hainan_Sheng",
+        "cluster": "BBG"
+      },
+      {
+        "city": "Maoming",
+        "cluster": "BBG"
+      },
+      {
+        "city": "Qinzhou",
+        "cluster": "BBG"
+      },
+      {
+        "city": "Yangjiang",
+        "cluster": "BBG"
+      },
+      {
+        "city": "Zhanjiang",
+        "cluster": "BBG"
+      },
+      {
+        "city": "Binzhou",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Cangzhou",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Dalian",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Dandong",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Dongying",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Huludao",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Jinzhou",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Panjin",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Qingdao",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Qinhuangdao",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Rizhao",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Tangshan",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Tianjin_Shi",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Weifang",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Weihai",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Yantai",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Yingkou",
+        "cluster": "BYS"
+      },
+      {
+        "city": "Chaozhou",
+        "cluster": "HX"
+      },
+      {
+        "city": "Fuzhou",
+        "cluster": "HX"
+      },
+      {
+        "city": "Jieyang",
+        "cluster": "HX"
+      },
+      {
+        "city": "Ningde",
+        "cluster": "HX"
+      },
+      {
+        "city": "Putian",
+        "cluster": "HX"
+      },
+      {
+        "city": "Quanzhou",
+        "cluster": "HX"
+      },
+      {
+        "city": "Shantou",
+        "cluster": "HX"
+      },
+      {
+        "city": "Xiamen",
+        "cluster": "HX"
+      },
+      {
+        "city": "Zhangzhou",
+        "cluster": "HX"
+      },
+      {
+        "city": "Dongguan",
+        "cluster": "PRD"
+      },
+      {
+        "city": "Guangzhou",
+        "cluster": "PRD"
+      },
+      {
+        "city": "Hong_Kong",
+        "cluster": "PRD"
+      },
+      {
+        "city": "Huizhou",
+        "cluster": "PRD"
+      },
+      {
+        "city": "Jiangmen",
+        "cluster": "PRD"
+      },
+      {
+        "city": "Shanwei",
+        "cluster": "PRD"
+      },
+      {
+        "city": "Shenzhen",
+        "cluster": "PRD"
+      },
+      {
+        "city": "Zhongshan",
+        "cluster": "PRD"
+      },
+      {
+        "city": "Zhuhai",
+        "cluster": "PRD"
+      },
+      {
+        "city": "Hangzhou",
+        "cluster": "YRD"
+      },
+      {
+        "city": "Jiaxing",
+        "cluster": "YRD"
+      },
+      {
+        "city": "Lianyungang",
+        "cluster": "YRD"
+      },
+      {
+        "city": "Nantong",
+        "cluster": "YRD"
+      },
+      {
+        "city": "Ningbo",
+        "cluster": "YRD"
+      },
+      {
+        "city": "Shanghai_Shi",
+        "cluster": "YRD"
+      },
+      {
+        "city": "Shaoxing",
+        "cluster": "YRD"
+      },
+      {
+        "city": "Taizhou",
+        "cluster": "YRD"
+      },
+      {
+        "city": "Wenzhou",
+        "cluster": "YRD"
+      },
+      {
+        "city": "Yancheng",
+        "cluster": "YRD"
+      },
+      {
+        "city": "Zhoushan",
+        "cluster": "YRD"
+      }
+    ]
+  },
+  "thresholds": {
+    "structural_zero_share": 0.95,
+    "near_constant_unique_values": 1,
+    "small_sample_observations": 3
+  },
+  "field_quality": [
+    {
+      "field": "Mangrove",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 548,
+      "zero_rate": 0.4699828473413379,
+      "unique_count": 615
+    },
+    {
+      "field": "Tidal_Flat",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 44,
+      "zero_rate": 0.03773584905660377,
+      "unique_count": 1123
+    },
+    {
+      "field": "Salt_Marsh",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 21,
+      "zero_rate": 0.018010291595197257,
+      "unique_count": 1141
+    },
+    {
+      "field": "Marsh",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 0,
+      "zero_rate": 0.0,
+      "unique_count": 1166
+    },
+    {
+      "field": "Temp_Mean_C",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 0,
+      "zero_rate": 0.0,
+      "unique_count": 1166
+    },
+    {
+      "field": "Precip_Sum_mm",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 0,
+      "zero_rate": 0.0,
+      "unique_count": 1166
+    },
+    {
+      "field": "Evap_Sum_mm",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 0,
+      "zero_rate": 0.0,
+      "unique_count": 1166
+    },
+    {
+      "field": "MODIS_Urban_Area_sqkm",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 0,
+      "zero_rate": 0.0,
+      "unique_count": 1117
+    },
+    {
+      "field": "Impervious_sqkm",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 0,
+      "zero_rate": 0.0,
+      "unique_count": 1166
+    },
+    {
+      "field": "Unified_NTL_Index",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 0,
+      "zero_rate": 0.0,
+      "unique_count": 1166
+    },
+    {
+      "field": "GDP_per_capita",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 0,
+      "zero_rate": 0.0,
+      "unique_count": 1156
+    },
+    {
+      "field": "Secondary_GDP_Share",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 1,
+      "zero_rate": 0.0008576329331046312,
+      "unique_count": 982
+    },
+    {
+      "field": "Total_Population",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 0,
+      "zero_rate": 0.0,
+      "unique_count": 1060
+    },
+    {
+      "field": "Pop_Density",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 0,
+      "zero_rate": 0.0,
+      "unique_count": 1060
+    },
+    {
+      "field": "Cropland_sqkm",
+      "missing_count": 0,
+      "missing_rate": 0.0,
+      "zero_count": 0,
+      "zero_rate": 0.0,
+      "unique_count": 1166
+    }
+  ],
+  "method": "deterministic pandas profiling of authoritative panel",
+  "flag_counts": {
+    "NEAR_CONSTANT_TARGET": 26,
+    "RATE_UNDEFINED_ZERO_BASE": 29,
+    "STRUCTURAL_ZERO": 26,
+    "WORLDPOP_REUSED_2020": 106
+  }
+}

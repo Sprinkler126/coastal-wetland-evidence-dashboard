@@ -1,0 +1,188 @@
+scope,entity,cluster,flag,count,detail
+unit_wetland,Binzhou:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Binzhou:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Binzhou:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Cangzhou:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Cangzhou:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Cangzhou:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Dalian:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Dalian:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Dalian:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Dandong:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Dandong:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Dandong:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Dongying:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Dongying:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Dongying:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Hangzhou:Mangrove,YRD,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Hangzhou:Mangrove,YRD,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Hangzhou:Mangrove,YRD,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Huludao:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Huludao:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Huludao:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Jiaxing:Mangrove,YRD,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Jiaxing:Mangrove,YRD,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Jiaxing:Mangrove,YRD,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Jieyang:Mangrove,HX,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Jinzhou:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Jinzhou:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Jinzhou:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Lianyungang:Mangrove,YRD,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Lianyungang:Mangrove,YRD,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Lianyungang:Mangrove,YRD,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Nantong:Mangrove,YRD,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Nantong:Mangrove,YRD,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Nantong:Mangrove,YRD,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Panjin:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Panjin:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Panjin:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Qingdao:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Qingdao:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Qingdao:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Qinhuangdao:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Qinhuangdao:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Qinhuangdao:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Rizhao:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Rizhao:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Rizhao:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Shanghai_Shi:Mangrove,YRD,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Shanghai_Shi:Mangrove,YRD,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Shanghai_Shi:Mangrove,YRD,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Shaoxing:Mangrove,YRD,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Shaoxing:Mangrove,YRD,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Shaoxing:Mangrove,YRD,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Tangshan:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Tangshan:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Tangshan:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Tianjin_Shi:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Tianjin_Shi:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Tianjin_Shi:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Weifang:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Weifang:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Weifang:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Weihai:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Weihai:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Weihai:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Yancheng:Mangrove,YRD,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Yancheng:Mangrove,YRD,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Yancheng:Mangrove,YRD,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Yantai:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Yantai:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Yantai:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Yingkou:Mangrove,BYS,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Yingkou:Mangrove,BYS,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Yingkou:Mangrove,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Hangzhou:Tidal_Flat,YRD,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Hangzhou:Tidal_Flat,YRD,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Hangzhou:Tidal_Flat,YRD,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Shaoxing:Tidal_Flat,YRD,NEAR_CONSTANT_TARGET,22,one or fewer distinct values
+unit_wetland,Shaoxing:Tidal_Flat,YRD,STRUCTURAL_ZERO,22,at least 95% of observations are zero
+unit_wetland,Shaoxing:Tidal_Flat,YRD,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Binzhou:Salt_Marsh,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+unit_wetland,Rizhao:Salt_Marsh,BYS,RATE_UNDEFINED_ZERO_BASE,1,relative change is null because start value is zero
+city_field,Beihai:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Binzhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Cangzhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Chaozhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Dalian:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Dandong:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Dongguan:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Dongying:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Fangchenggang:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Fuzhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Guangzhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Hainan_Sheng:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Hangzhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Hong_Kong:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Huizhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Huludao:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Jiangmen:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Jiaxing:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Jieyang:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Jinzhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Lianyungang:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Maoming:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Nantong:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Ningbo:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Ningde:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Panjin:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Putian:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Qingdao:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Qinhuangdao:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Qinzhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Quanzhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Rizhao:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Shanghai_Shi:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Shantou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Shanwei:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Shaoxing:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Shenzhen:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Taizhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Tangshan:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Tianjin_Shi:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Weifang:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Weihai:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Wenzhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Xiamen:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Yancheng:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Yangjiang:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Yantai:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Yingkou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Zhangzhou:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Zhanjiang:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Zhongshan:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Zhoushan:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Zhuhai:Total_Population,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Beihai:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Binzhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Cangzhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Chaozhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Dalian:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Dandong:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Dongguan:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Dongying:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Fangchenggang:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Fuzhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Guangzhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Hainan_Sheng:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Hangzhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Hong_Kong:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Huizhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Huludao:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Jiangmen:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Jiaxing:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Jieyang:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Jinzhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Lianyungang:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Maoming:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Nantong:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Ningbo:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Ningde:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Panjin:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Putian:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Qingdao:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Qinhuangdao:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Qinzhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Quanzhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Rizhao:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Shanghai_Shi:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Shantou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Shanwei:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Shaoxing:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Shenzhen:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Taizhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Tangshan:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Tianjin_Shi:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Weifang:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Weihai:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Wenzhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Xiamen:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Yancheng:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Yangjiang:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Yantai:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Yingkou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Zhangzhou:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Zhanjiang:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Zhongshan:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Zhoushan:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical
+city_field,Zhuhai:Pop_Density,,WORLDPOP_REUSED_2020,3,2020-2022 values are identical

@@ -1,0 +1,54 @@
+{
+  "schema_id": "coastal-wetland-evidence-bundle-schema",
+  "schema_version": "1.0.0",
+  "contract_reference": "evidence/contracts/evidence_contract.json",
+  "required_bundle_fields": [
+    "schema_version",
+    "contract_id",
+    "contract_version",
+    "bundle_id",
+    "source_metadata",
+    "enumerations",
+    "cluster_summary",
+    "unit_evidence",
+    "quality_flags",
+    "model_evidence",
+    "limitations"
+  ],
+  "required_evidence_fields": [
+    "evidence_id",
+    "evidence_type",
+    "status",
+    "period",
+    "scale",
+    "wetland_code",
+    "method",
+    "source",
+    "metrics",
+    "limitations"
+  ],
+  "evidence_types": [
+    "FACT",
+    "ASSOCIATION",
+    "MODEL_ATTRIBUTION",
+    "EXPLORATORY",
+    "INSUFFICIENT"
+  ],
+  "scales": [
+    "global",
+    "panel",
+    "cluster",
+    "spatial_unit"
+  ],
+  "cardinality": {
+    "cluster_summary": 20,
+    "unit_evidence": 212
+  },
+  "semantic_rules": [
+    "Every evidence record has period, scale, method, source and non-empty limitations.",
+    "SHAP and partial-effect are model attribution or response summaries, not causal effects.",
+    "Matrix categories are synthesis-based screening/review categories, not future risk probabilities.",
+    "No future risk probability is produced.",
+    "Cluster evidence is not downscaled to spatial units."
+  ]
+}

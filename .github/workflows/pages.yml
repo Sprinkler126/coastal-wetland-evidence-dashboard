@@ -1,4 +1,4 @@
-name: Deploy static dashboard to Pages
+﻿name: Deploy static dashboard to Pages
 
 on:
   push:
@@ -30,6 +30,8 @@ jobs:
         run: |
           node scripts/test-i18n.mjs
           node scripts/test-data-contracts.mjs
+          node scripts/test-page-navigation.mjs
+          python scripts/evidence/validate_screening_evidence.py
           for file in web/web/js/*.js scripts/*.mjs; do node --check "$file"; done
 
       - name: Verify Pages artifact
@@ -39,6 +41,7 @@ jobs:
           test -f web/web/vendor/echarts.min.js
           test -f web/web/data/manifest.json
           test -f web/web/data/evidence_bundle.json
+          test -f web/web/data/screening_evidence.csv
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

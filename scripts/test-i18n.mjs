@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = fs.readFileSync(path.join(root, 'web', 'web', 'js', 'i18n.js'), 'utf8');
+const indexHtml = fs.readFileSync(path.join(root, 'web', 'web', 'index.html'), 'utf8');
 
 function loadI18n({ storedLocale = null, languages = [], language = undefined, pathname = '/web/web/index.html' } = {}) {
     const storage = new Map(storedLocale ? [['wetland-dashboard:locale:https://example.test/web/web/', storedLocale]] : []);
@@ -37,6 +38,13 @@ const app = loadI18n({ storedLocale: 'en-US', languages: ['zh-CN'] });
 assert.equal(app.i18n.getLocale(), 'en', 'saved locale wins over navigator preferences');
 assert.equal(app.i18n.test.dictionaryParity(), true, 'zh-CN and en dictionaries must have identical keys');
 assert.deepEqual([...Object.keys(app.i18n.dictionaries['zh-CN'])].sort(), [...Object.keys(app.i18n.dictionaries.en)].sort());
+const markupKeys = [...indexHtml.matchAll(/data-i18n(?:-(?:aria-label|placeholder|title))?="([^"]+)"/g)].map(match => match[1]);
+for (const key of new Set(markupKeys)) {
+    assert.ok(Object.hasOwn(app.i18n.dictionaries['zh-CN'], key), `zh-CN dictionary contains markup key ${key}`);
+    assert.ok(Object.hasOwn(app.i18n.dictionaries.en, key), `en dictionary contains markup key ${key}`);
+}
+assert.match(indexHtml, /id="page-methods"/);
+assert.match(indexHtml, /showPage\('methods'\)/);
 
 assert.equal(app.i18n.normalizeLocale('ZH_hans_cn'), 'zh-CN');
 assert.equal(app.i18n.normalizeLocale('en-GB'), 'en');
@@ -52,7 +60,7 @@ assert.equal(app.i18n.label('cluster', 'BYS'), 'Bohai Sea');
 assert.equal(app.i18n.label('feature', 'Temp_Mean_C'), 'Mean Temperature');
 assert.equal(app.i18n.label('featureGroup', 'Climate'), 'Climate');
 assert.equal(app.i18n.label('scope', 'global'), 'All samples');
-assert.equal(app.i18n.label('figure14.High', 'label'), 'High-priority screening category');
+assert.equal(app.i18n.label('figure14.High', 'label'), 'High-priority review');
 assert.match(app.i18n.label('figure14', 'boundary'), /not future-risk probabilities/i);
 assert.equal(app.i18n.label('evidenceType', 'MODEL_ATTRIBUTION'), 'Model attribution');
 assert.equal(app.i18n.label('audience', 'ngo_internal'), 'NGO internal');
@@ -63,6 +71,7 @@ assert.equal(app.i18n.label('answerStatus', 'needs_review'), 'Needs review');
 assert.equal(app.i18n.label('wetland', 'UnmappedWetland'), 'UnmappedWetland', 'unknown stable codes are preserved');
 
 assert.equal(app.i18n.t('common.global'), 'All samples', 'global means all samples, not the world');
+assert.equal(app.i18n.t('nav.methods'), 'Data & Methods');
 assert.equal(app.i18n.t('scope.global'), 'All samples');
 assert.match(app.i18n.t('figure14.boundary'), /not future-risk probabilities/i);
 assert.doesNotMatch(app.i18n.t('figure14.boundary'), /future[- ]risk probability\.$/i, 'boundary is a statement, not a probability value');
